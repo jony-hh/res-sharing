@@ -36,8 +36,7 @@ public class SwaggerConfig {
                 .contact(contact)
                 .version("1.0.0")
                 .termsOfService("https://github.com/res-sharing")
-                .license(new License().name("MIT")
-                        .url("https://github.com/res-sharing")));
+                .license(new License().name("MIT").url("https://github.com/res-sharing")));
     }
 
 }

@@ -5,7 +5,7 @@ server:
     threads:
       max: 1000
       min-spare: 30
-  port: 8080
+  port: 8866
   servlet:
     context-path: /
     session:
@@ -26,6 +26,7 @@ spring:
     name: res-sharing
   jackson:
     time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
   servlet:
     multipart:
       max-file-size: 1024MB
@@ -84,3 +85,21 @@ easy-trans:
   is-enable-global: true
   #启用平铺模式
   is-enable-tile: true
+
+# selt
+shuishu:
+  # 登录策略（默认ONE：com.shuishu.demo.security.common.config.security.LoginPolicyConfig.getLoginPolicy）
+  # ONE: 达到最大客户端登录人数，将最早登录的客户端给踢掉
+  # TWO: 达到最大客户端登录人数，不允许登录
+  login-policy: TWO
+  token:
+    secret: spring_security_examples
+    auth-token: AuthToken
+    # 此刷新token就是记住我功能的 token
+    remember-me-token: RememberMeToken
+    # auth-token 有效时间（秒） 1小时 = 1 * 60 * 60
+    expire-time: 3600
+    # refresh-token 有效时间（秒）： 30天 = 1 * 60 * 60 * 24 * 30
+    remember-me-token-expire-time: 2592000
+    # auth-token 距离过期时间 expire-time 还有多少秒，重新设置有效时间为 expire-time：5分钟 = 1 * 60 * 5
+    surplus-refresh-time: 300
