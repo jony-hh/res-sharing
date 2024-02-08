@@ -90,14 +90,14 @@ public class TokenUtils {
                 }
                 // 缓存当前在线的客户端
                 AuthTokenCacheDto authTokenCacheDto = new AuthTokenCacheDto();
-                List<AuthTokenCacheDto> userAuthTokenList = getUserAllAuthTokenList(userInfoVo.getUserId());
+                List<AuthTokenCacheDto> userAuthTokenList = getUserAllAuthTokenList(userInfoVo.getId());
                 if (ObjectUtils.isEmpty(userAuthTokenList)) {
                     userAuthTokenList = new ArrayList<>();
                 }
                 authTokenCacheDto.setAuthToken(authToken);
                 authTokenCacheDto.setCreateTime(new Timestamp(System.currentTimeMillis()));
                 userAuthTokenList.add(authTokenCacheDto);
-                setUserAuthTokenList(userInfoVo.getUserId(), userAuthTokenList);
+                setUserAuthTokenList(userInfoVo.getId(), userAuthTokenList);
                 return true;
             }
         }
@@ -239,10 +239,10 @@ public class TokenUtils {
         }
 
         if (userInfoVo != null) {
-            List<AuthTokenCacheDto> userAllAuthTokenList = getUserAllAuthTokenList(userInfoVo.getUserId());
+            List<AuthTokenCacheDto> userAllAuthTokenList = getUserAllAuthTokenList(userInfoVo.getId());
             if (!ObjectUtils.isEmpty(userAllAuthTokenList)) {
                 Map<Long, List<AuthTokenCacheDto>> authTokenMap = new HashMap<>();
-                authTokenMap.put(userInfoVo.getUserId(), userAllAuthTokenList);
+                authTokenMap.put(userInfoVo.getId(), userAllAuthTokenList);
                 return authTokenMap;
             }
         }

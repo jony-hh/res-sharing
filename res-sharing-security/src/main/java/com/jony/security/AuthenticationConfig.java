@@ -71,7 +71,7 @@ public class AuthenticationConfig {
                 log.info("【LocalDaoAuthenticationProvider 认证】执行authenticate()方法，查询用户：" + userInfoVO);
 
                 // 校验密码正确性
-                if (!passwordEncoder().matches(userAuthCredential, userInfoVO.getUserAuthCredential())) {
+                if (!passwordEncoder().matches(userAuthCredential, userInfoVO.getPassword())) {
                     log.info("【LocalDaoAuthenticationProvider 认证】执行authenticate()方法，账号：{} 密码错误", userAuthIdentifier);
                     throw new BadCredentialsException("用户名或密码不正确");
                 }

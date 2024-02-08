@@ -85,6 +85,11 @@ public class UserInfoVo implements UserDetails {
     @JsonIgnore
     private String userAuthCredential;
     /**
+     * 凭证信息
+     */
+    @JsonIgnore
+    private String password;
+    /**
      * 刷新token
      */
     private String userAuthRefreshToken;
@@ -121,7 +126,7 @@ public class UserInfoVo implements UserDetails {
     @JsonIgnore
     @Override
     public String getPassword() {
-        return this.userAuthCredential;
+        return this.password;
     }
 
     @JsonIgnore

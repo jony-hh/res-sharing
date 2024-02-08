@@ -41,7 +41,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             LambdaQueryWrapper<SysRoleMenu> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(SysRoleMenu::getRoleId, roleId);
             List<SysRoleMenu> sysRoleMenus = roleMenuMapper.selectList(wrapper);
-            allData.add(sysRoleMenus);
+            if (sysRoleMenus != null) {
+                allData.add(sysRoleMenus);
+            }
         }
 
         List<SysRoleMenu> roleMenus = allData.stream()
@@ -53,7 +55,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         List<SysMenu> menus = new ArrayList<>();
         for (Long menuId : menuIds) {
             SysMenu sysMenu = menuMapper.selectById(menuId);
-            menus.add(sysMenu);
+            if (sysMenu != null) {
+                menus.add(sysMenu);
+            }
         }
 
         return menus;

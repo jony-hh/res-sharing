@@ -74,7 +74,7 @@ public class LoginPolicyFilter extends OncePerRequestFilter {
                         userMaxLoginClientNumber = userMaxLoginClientNumber == null ? 1 : userMaxLoginClientNumber;
                         log.info("用户【{}】，最多登录的客户端为【{}】个", userInfoVo.getNickname(), userMaxLoginClientNumber);
                         // 已经登录的客户端人数 token
-                        List<AuthTokenCacheDto> authTokenCacheDtoList = tokenUtils.getUserAllAuthTokenList(userInfoVo.getUserId());
+                        List<AuthTokenCacheDto> authTokenCacheDtoList = tokenUtils.getUserAllAuthTokenList(userInfoVo.getId());
                         // 当前用户可以登录的最多人数 <= 当前用户已经登录的人数
                         if (!ObjectUtils.isEmpty(authTokenCacheDtoList) && userMaxLoginClientNumber <= authTokenCacheDtoList.size()) {
                             log.info("用户【{}】，已经登录的客户端为【{}】个", userInfoVo.getNickname(), authTokenCacheDtoList.size());
@@ -91,7 +91,7 @@ public class LoginPolicyFilter extends OncePerRequestFilter {
                                 tokenUtils.logout(authToken, null);
                                 // 重新设置 当前用户登录的 所有客户端token缓存
                                 authTokenCacheDtoList = authTokenCacheDtoList.stream().filter(t -> !t.getAuthToken().equals(authToken)).collect(Collectors.toList());
-                                tokenUtils.setUserAuthTokenList(userInfoVo.getUserId(), authTokenCacheDtoList);
+                                tokenUtils.setUserAuthTokenList(userInfoVo.getId(), authTokenCacheDtoList);
                                 // TODO 发送消息通知给前端 websocket
 
 
