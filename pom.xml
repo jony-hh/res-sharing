@@ -14,6 +14,7 @@
         <module>res-sharing-admin-server</module>
         <module>res-sharing-security</module>
         <module>res-sharing-mapper</module>
+        <module>res-sharing-search</module>
     </modules>
 
     <groupId>com.jony</groupId>
@@ -34,6 +35,8 @@
         <jjwt.version>0.9.1</jjwt.version>
         <mybatisplus.version>3.5.5</mybatisplus.version>
         <mybatis.spring.version>3.0.3</mybatis.spring.version>
+        <elasticsearch.version>8.12.0</elasticsearch.version>
+        <jakarta.json.version>2.0.1</jakarta.json.version>
         <dynamic-datasource.version>4.1.3</dynamic-datasource.version>
         <redisson.version>3.21.3</redisson.version>
         <dameng.version>8.1.2.79</dameng.version>
@@ -97,6 +100,17 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
                 <version>${dynamic-datasource.version}</version>
+            </dependency>
+            <!-- es的java api client -->
+            <dependency>
+                <groupId>co.elastic.clients</groupId>
+                <artifactId>elasticsearch-java</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.json</groupId>
+                <artifactId>jakarta.json-api</artifactId>
+                <version>${jakarta.json.version}</version>
             </dependency>
             <!-- redis客户端 -->
             <dependency>

@@ -1,0 +1,25 @@
+{
+  "properties": {
+    "id": {
+      "type": "long"
+    },
+    "user": {
+      "type": "nested",
+      "properties": {
+        "last": {
+          "type": "keyword"
+        },
+        "id": {
+          "type": "long"
+        },
+        "first": {
+          "type": "keyword"
+        }
+      }
+    },
+    "group": {
+      "fielddata": true,
+      "type": "text"
+    }
+  }
+}

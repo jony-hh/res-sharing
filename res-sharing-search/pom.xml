@@ -6,7 +6,7 @@
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>res-sharing-portal-server</artifactId>
+    <artifactId>res-sharing-search</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -16,9 +16,16 @@
             <version>${revision}</version>
         </dependency>
         <dependency>
-            <groupId>com.jony</groupId>
-            <artifactId>res-sharing-search</artifactId>
-            <version>${revision}</version>
+            <groupId>co.elastic.clients</groupId>
+            <artifactId>elasticsearch-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -29,15 +36,10 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- <dependency> -->
+        <!--     <groupId>io.lettuce</groupId> -->
+        <!--     <artifactId>lettuce-core</artifactId> -->
+        <!-- </dependency> -->
     </dependencies>
 
-    <build>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

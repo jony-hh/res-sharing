@@ -8,7 +8,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication
 public class PortalServerApplication extends SpringBootServletInitializer {
 
-	// http://localhost:8877/doc.html
+	// http://localhost:8877/api/doc.html
 	public static void main(String[] args) {
 		SpringApplication.run(PortalServerApplication.class, args);
 	}

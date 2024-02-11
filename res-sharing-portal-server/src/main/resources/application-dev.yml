@@ -1,3 +1,13 @@
+elasticsearch:
+  schema: http
+  address: localhost:9200
+  connectTimeout: 10000
+  socketTimeout: 15000
+  connectionRequestTimeout: 20000
+  maxConnectNum: 100
+  maxConnectPerRoute: 100
+  index: "test1"
+
 spring:
   data:
     redis:
