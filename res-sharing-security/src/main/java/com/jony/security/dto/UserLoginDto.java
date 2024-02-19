@@ -19,4 +19,6 @@ public class UserLoginDto {
 
     private Boolean isRememberMe;
 
+    private String captcha;
+
 }

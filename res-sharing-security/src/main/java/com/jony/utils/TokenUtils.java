@@ -1,6 +1,7 @@
 package com.jony.utils;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.jony.security.vo.UserInfoVo;
 import com.jony.enums.RedisKeyEnum;
 import com.jony.security.dto.AuthTokenCacheDto;
@@ -251,7 +252,11 @@ public class TokenUtils {
     }
 
     public void logout(HttpServletRequest request) {
-        logout(request.getHeader(ymlAuthToken), request.getHeader(ymlRememberMeToken));
+        String token = request.getHeader(ymlAuthToken);
+        String rememberMeToken = request.getHeader(ymlAuthToken);
+        if (StrUtil.isEmpty(token) && StrUtil.isEmpty(rememberMeToken)) {
+            logout(token,rememberMeToken);
+        }
     }
 
     public void logout(String authToken, String rememberMeToken) {

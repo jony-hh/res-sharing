@@ -23,19 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2024-02-07 13:12:59
  */
 @RestController
-@RequestMapping("sysAuth")
+@RequestMapping("sys/auth")
 @RequiredArgsConstructor
 public class SysAuthController {
 
     private final SysAuthService sysAuthService;
     private final TokenUtils tokenUtils;
 
-    @PostMapping("logout")
-    public CommonResult<String> logout(HttpServletRequest request) {
-        System.out.println("退出登录----------- logout");
-        tokenUtils.logout(request);
-        return CommonResult.success("退出登录", null);
-    }
 
     @PostMapping("local")
     public CommonResult<UserInfoVo> local(@RequestBody UserLoginDto userLoginDTO, HttpServletResponse response) {

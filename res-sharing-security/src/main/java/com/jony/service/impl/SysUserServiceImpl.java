@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -49,16 +50,29 @@ public class SysUserServiceImpl implements SysUserService {
         UserInfoVo userInfoVO = new UserInfoVo();
         BeanUtils.copyProperties(userAuth, userInfoVO);
         BeanUtils.copyProperties(user, userInfoVO);
-
-        // 角色
+        userInfoVO.setUserMaxLoginClientNumber(40);
+        // 设置角色
         List<SysRole> roleInfoList = roleMapper.findRoleInfoByUserId(userInfoVO.getId());
         if (!ObjectUtils.isEmpty(roleInfoList)) {
             userInfoVO.setRoleInfoList(roleInfoList);
-            // 权限
+
+            // 设置权限
+            // 管理员直接返回所有权限
+            for (SysRole role : roleInfoList) {
+                if (role.getRoleCode().equals("sys_admin")) {
+                    Set<String> permissionInfoList = menuService.findPermissionInfo();
+                    if (!ObjectUtils.isEmpty(permissionInfoList)) {
+                        userInfoVO.setAuthoritySet(permissionInfoList);
+                        return userInfoVO;
+                    }
+                }
+            }
+
+            // 不是管理员则根据【角色id】查询权限
             List<Long> roleIds = roleInfoList.stream().map(SysRole::getId).collect(Collectors.toList());
-            List<SysMenu> permissionInfoList = menuService.findPermissionInfoByRoleIdList(roleIds);
+            Set<String> permissionInfoList = menuService.findPermissionInfoByRoleIdList(roleIds);
             if (!ObjectUtils.isEmpty(permissionInfoList)) {
-                userInfoVO.setPermissionInfoList(permissionInfoList);
+                userInfoVO.setAuthoritySet(permissionInfoList);
             }
         }
 

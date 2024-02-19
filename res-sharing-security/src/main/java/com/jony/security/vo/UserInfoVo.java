@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serial;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author ：谁书-ss
@@ -112,15 +113,13 @@ public class UserInfoVo implements UserDetails {
     /**
      * 权限集合
      */
-    private List<SysMenu> permissionInfoList;
+    private Set<String> authoritySet;
 
 
-    @JsonIgnore
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        this.permissionInfoList.forEach(t -> authorities.add(new SimpleGrantedAuthority(t.getUrl())));
-        return authorities;
+        return authoritySet.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
     }
 
     @JsonIgnore

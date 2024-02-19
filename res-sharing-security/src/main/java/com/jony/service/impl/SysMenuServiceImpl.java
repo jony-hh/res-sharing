@@ -1,5 +1,6 @@
 package com.jony.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -15,8 +16,7 @@ import com.jony.entity.SysMenu;
 import com.jony.mapper.SysMenuMapper;
 import com.jony.service.SysMenuService;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -34,9 +34,38 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     private final SysRoleMapper roleMapper;
     private final SysMenuMapper menuMapper;
 
+
+    /**
+     * 查询所有权限
+     *
+     * @return List<SysMenu>
+     */
+    public Set<String> findPermissionInfo(){
+        List<SysMenu> menuList = this.list();
+        Set<String> authorityList = menuList.stream()
+                .map(SysMenu::getAuthority)
+                .collect(Collectors.toSet());
+
+        // 用户权限列表
+        Set<String> authoritySet = new HashSet<>();
+        for (String authority : authorityList) {
+            if (StrUtil.isBlank(authority)) {
+                continue;
+            }
+            authoritySet.addAll(Arrays.asList(authority.trim().split(",")));
+        }
+        return authoritySet;
+    }
+
+    /**
+     * 通过角色列表查询所有权限
+     * @param roleIdList
+     * @return List<SysMenu>
+     */
     @Override
-    public List<SysMenu> findPermissionInfoByRoleIdList(List<Long> roleIdList) {
+    public Set<String> findPermissionInfoByRoleIdList(List<Long> roleIdList) {
         List<List<SysRoleMenu>> allData = new ArrayList<>();
+        // 一个role可能对应多个menu
         for (Long roleId : roleIdList) {
             LambdaQueryWrapper<SysRoleMenu> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(SysRoleMenu::getRoleId, roleId);
@@ -46,11 +75,16 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             }
         }
 
+        // 【Flatten扁平化、distinct根据id去重】重写hashcode与equals
         List<SysRoleMenu> roleMenus = allData.stream()
-                .flatMap(List::stream)  // Flatten the List<List<SysRoleMenu>> to List<SysRoleMenu>
-                .distinct()             // Distinct based on equals and hashCode of SysRoleMenu
+                .flatMap(List::stream)
+                .distinct()
                 .collect(Collectors.toList());
-        List<Long> menuIds = roleMenus.stream().map(SysRoleMenu::getMenuId).collect(Collectors.toList());
+
+        // 得到所有的menuid
+        Set<Long> menuIds = roleMenus.stream()
+                .map(SysRoleMenu::getMenuId)
+                .collect(Collectors.toSet());
 
         List<SysMenu> menus = new ArrayList<>();
         for (Long menuId : menuIds) {
@@ -60,8 +94,19 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             }
         }
 
-        return menus;
+        Set<String> authorityList = menus.stream()
+                .map(SysMenu::getAuthority)
+                .collect(Collectors.toSet());
 
+        // 用户权限列表
+        Set<String> authoritySet = new HashSet<>();
+        for (String authority : authorityList) {
+            if (StrUtil.isBlank(authority)) {
+                continue;
+            }
+            authoritySet.addAll(Arrays.asList(authority.trim().split(",")));
+        }
+        return authoritySet;
     }
 
     /**

@@ -5,6 +5,7 @@ import com.jony.entity.SysMenu;
 import com.jony.security.dto.PermissionCacheDto;
 
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -15,7 +16,9 @@ import java.util.List;
  */
 public interface SysMenuService extends IService<SysMenu> {
 
-    List<SysMenu> findPermissionInfoByRoleIdList(List<Long> roleIdList);
+    Set<String> findPermissionInfo();
+
+    Set<String> findPermissionInfoByRoleIdList(List<Long> roleIdList);
 
     List<PermissionCacheDto> findCachePermissionList();
 }

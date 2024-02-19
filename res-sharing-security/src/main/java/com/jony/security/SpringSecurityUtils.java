@@ -25,10 +25,10 @@ import java.util.List;
  * @description ：Spring Security 工具类
  */
 public class SpringSecurityUtils {
-    public static final String LOGOUT_URL = "/api/shuishu/demo/auth/logout";
-    public static final String LOGIN_URL_LOCAL = "/api/shuishu/demo/auth/local";
-    public static final String LOGIN_URL_EMAIL = "/api/shuishu/demo/auth/email";
-    public static final String LOGIN_URL_PHONE = "/api/shuishu/demo/auth/phone";
+    public static final String LOGOUT_URL = "/api/sys/auth/logout";
+    public static final String LOGIN_URL_LOCAL = "/api/sys/auth/local";
+    public static final String LOGIN_URL_EMAIL = "/api/sys/auth/email";
+    public static final String LOGIN_URL_PHONE = "/api/sys/auth/phone";
 
     public static final String LOGIN_USERNAME_KEY = "userAuthIdentifier";
     public static final String LOGIN_USERNAME_FRONT_KEY = "username";
@@ -56,8 +56,8 @@ public class SpringSecurityUtils {
                 "/webjars/**",
                 "/v3/api-docs/**",
                 //加前缀，是为了过滤器判断使用
-                "/api/sysAuth/**",
-                "/sysAuth/**"
+                "/api/sys/auth/**",
+                "/sys/auth/**"
         };
     }
 
