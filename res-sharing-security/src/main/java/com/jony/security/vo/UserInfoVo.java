@@ -18,11 +18,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2023-01-01 15:03
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：
  */
 @Setter

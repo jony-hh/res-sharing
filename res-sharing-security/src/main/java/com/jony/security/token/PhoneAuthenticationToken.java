@@ -8,13 +8,9 @@ import java.io.Serial;
 import java.util.Collection;
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2023-03-05 14:34
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：手机号 token
- * <p></p>
  */
 public class PhoneAuthenticationToken extends UsernamePasswordAuthenticationToken {
     @Serial

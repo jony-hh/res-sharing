@@ -2,7 +2,7 @@ package com.jony.security.filter;
 
 
 import com.jony.exception.ApiResponse;
-import com.jony.security.SpringSecurityUtils;
+import com.jony.security.utils.SpringSecurityUtils;
 import com.jony.security.cache.ResourceService;
 import com.jony.security.dto.PermissionCacheDto;
 import com.jony.security.token.EmailAuthenticationToken;
@@ -29,13 +29,9 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2023-03-12 11:38
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：登录认证 Filter
- * <p></p>
  * AbstractAuthenticationProcessingFilter：是处理 form 登陆的过滤器
  * 1、继承了 AbstractAuthenticationProcessingFilter，实现类中的抽象方法 attemptAuthentication()
  * 2、重写构造方法，因为security中的 AbstractAuthenticationProcessingFilter类没有无参构造方法

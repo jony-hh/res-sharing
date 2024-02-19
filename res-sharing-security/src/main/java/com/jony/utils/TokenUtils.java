@@ -19,13 +19,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2023-03-09 21:36
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：Token 工具类
- * <p></p>
  */
 @Slf4j
 @Component
@@ -254,9 +250,10 @@ public class TokenUtils {
     public void logout(HttpServletRequest request) {
         String token = request.getHeader(ymlAuthToken);
         String rememberMeToken = request.getHeader(ymlAuthToken);
-        if (StrUtil.isEmpty(token) && StrUtil.isEmpty(rememberMeToken)) {
-            logout(token,rememberMeToken);
+        if (StrUtil.isEmpty(token)) {
+            return;
         }
+        logout(token,rememberMeToken);
     }
 
     public void logout(String authToken, String rememberMeToken) {

@@ -2,11 +2,8 @@ package com.jony.exception;
 
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2022-12-25 11:34
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：
  */
 public class BusinessException extends RuntimeException{

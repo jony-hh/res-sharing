@@ -2,7 +2,7 @@ package com.jony.security.filter;
 
 
 import com.jony.exception.ApiResponse;
-import com.jony.security.SpringSecurityUtils;
+import com.jony.security.utils.SpringSecurityUtils;
 import com.jony.security.token.LocalAuthenticationToken;
 import com.jony.security.vo.UserInfoVo;
 import com.jony.utils.ResponseUtils;
@@ -18,23 +18,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2022-12-29 22:11
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：本地账号登录过滤器
- * <p></p>
  * 合并的方式：所有类型方式的登录，登录过滤器逻辑统一在 {@link LoginFilter}
  */
 @Slf4j
-//@Component
+@Component
 @RequiredArgsConstructor
 public class LocalLoginFilter extends OncePerRequestFilter {
 

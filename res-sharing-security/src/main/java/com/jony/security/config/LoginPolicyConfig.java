@@ -1,4 +1,4 @@
-package com.jony.security;
+package com.jony.security.config;
 
 
 import com.jony.enums.UserEnum;
@@ -6,13 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2023-03-12 12:49
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：登录策略
- * <p></p>
  */
 @Component
 public class LoginPolicyConfig {

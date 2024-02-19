@@ -4,8 +4,8 @@ package com.jony.security.filter;
 import com.alibaba.fastjson.JSONObject;
 import com.jony.enums.UserEnum;
 import com.jony.exception.ApiResponse;
-import com.jony.security.LoginPolicyConfig;
-import com.jony.security.SpringSecurityUtils;
+import com.jony.security.config.LoginPolicyConfig;
+import com.jony.security.utils.SpringSecurityUtils;
 import com.jony.security.dto.AuthTokenCacheDto;
 import com.jony.security.vo.UserInfoVo;
 import com.jony.service.SysUserService;
@@ -30,13 +30,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2023-03-12 12:57
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：登录策略过滤器
- * <p></p>
  * {@link LoginPolicyConfig}
  * {@link UserEnum.LoginPolicy}
  */
@@ -65,6 +61,10 @@ public class LoginPolicyFilter extends OncePerRequestFilter {
                 if (!tokenUtils.hasAuthToken(request)) {
                     // 获取用户
                     JSONObject jsonObject = JSONObject.parseObject(requestWrapper.getBody());
+                    if (jsonObject == null) {
+                        log.info("需要输入账号与密码");
+                        return;
+                    }
                     Object usernameObj = jsonObject.get(SpringSecurityUtils.LOGIN_USERNAME_FRONT_KEY);
                     String username = usernameObj == null ? null : String.valueOf(usernameObj);
                     UserInfoVo userInfoVo = userService.findByUserAuthIdentifier(username, SpringSecurityUtils.getAuthType(requestUri));

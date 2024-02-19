@@ -1,4 +1,4 @@
-package com.jony.security;
+package com.jony.security.utils;
 
 import com.jony.enums.UserEnum;
 import com.jony.exception.BusinessException;
@@ -17,15 +17,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.List;
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2022-12-31 13:40
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：Spring Security 工具类
  */
 public class SpringSecurityUtils {
-    public static final String LOGOUT_URL = "/api/sys/auth/logout";
+    public static final String LOGOUT_URL = "/api/sys/user/logout";
     public static final String LOGIN_URL_LOCAL = "/api/sys/auth/local";
     public static final String LOGIN_URL_EMAIL = "/api/sys/auth/email";
     public static final String LOGIN_URL_PHONE = "/api/sys/auth/phone";

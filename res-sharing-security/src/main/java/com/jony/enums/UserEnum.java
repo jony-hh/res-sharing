@@ -1,20 +1,18 @@
 package com.jony.enums;
 
 
-import com.jony.security.LoginPolicyConfig;
+import com.jony.security.config.LoginPolicyConfig;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2023-01-01 15:28
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：
  */
 public interface UserEnum {
+
     enum AuthType {
         /**
          * 登录类型

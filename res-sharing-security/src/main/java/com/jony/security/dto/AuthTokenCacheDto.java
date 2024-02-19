@@ -11,13 +11,9 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2023-03-12 16:48
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：缓存登录 Token
- * <p></p>
  */
 @Setter
 @Getter

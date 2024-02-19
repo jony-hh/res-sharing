@@ -2,13 +2,9 @@ package com.jony.enums;
 
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2023-03-10 22:46
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：Redis 常用缓存的 key
- * <p></p>
  */
 public enum RedisKeyEnum {
     /**

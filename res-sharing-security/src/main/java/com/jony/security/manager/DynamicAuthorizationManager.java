@@ -1,4 +1,4 @@
-package com.jony.security.authorization;
+package com.jony.security.manager;
 
 
 import com.jony.security.cache.ResourceService;
@@ -23,13 +23,9 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2023-03-11 0:06
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：动态权限决策管理器
- * <p></p>
  */
 @Slf4j
 @Component

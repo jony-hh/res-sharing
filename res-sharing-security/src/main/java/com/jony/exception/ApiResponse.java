@@ -7,11 +7,8 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2022-12-24 19:51
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)

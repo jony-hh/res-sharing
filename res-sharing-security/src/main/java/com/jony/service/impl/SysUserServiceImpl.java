@@ -50,7 +50,6 @@ public class SysUserServiceImpl implements SysUserService {
         UserInfoVo userInfoVO = new UserInfoVo();
         BeanUtils.copyProperties(userAuth, userInfoVO);
         BeanUtils.copyProperties(user, userInfoVO);
-        userInfoVO.setUserMaxLoginClientNumber(40);
         // 设置角色
         List<SysRole> roleInfoList = roleMapper.findRoleInfoByUserId(userInfoVO.getId());
         if (!ObjectUtils.isEmpty(roleInfoList)) {

@@ -1,26 +1,23 @@
-package com.jony.security;
+package com.jony.security.config;
 
 
-import com.jony.security.authorization.DynamicAuthorizationManager;
-import com.jony.security.filter.LoginFilter;
-import com.jony.security.filter.LoginPolicyFilter;
+import com.jony.security.filter.*;
+import com.jony.security.handler.GlobalAuthenticationHandler;
+import com.jony.security.utils.SpringSecurityUtils;
+import com.jony.security.manager.DynamicAuthorizationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2022-12-29 21:59
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：SpringSecurity 配置
  */
 @Configuration
@@ -33,9 +30,9 @@ public class SpringSecurityConfig {
      * 不同的登录类型，可以创建不同类型的过滤器分别处理，
      * 也可以只创建一个 Filter：LoginFilter，然后根据不同类型的登录url，来创建不同的 Token
      */
-    // private final LocalLoginFilter localLoginFilter;
-    // private final EmailLoginFilter emailLoginFilter;
-    // private final PhoneLoginFilter phoneLoginFilter;
+    private final LocalLoginFilter localLoginFilter;
+    private final EmailLoginFilter emailLoginFilter;
+    private final PhoneLoginFilter phoneLoginFilter;
     private final LoginFilter loginFilter;
     private final LoginPolicyFilter loginPolicyFilter;
     private final DynamicAuthorizationManager dynamicAuthorizationManager;
@@ -56,15 +53,14 @@ public class SpringSecurityConfig {
         httpSecurity.authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests
                         .requestMatchers(SpringSecurityUtils.ignoreUrlArray()).permitAll()
-                        // requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .anyRequest().access(dynamicAuthorizationManager)
+                        .anyRequest().authenticated()
         );
 
         httpSecurity
                 .formLogin(formLogin -> formLogin.disable())
                 .addFilterBefore(loginPolicyFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class)
-                //.addFilterBefore(localLoginFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(localLoginFilter, UsernamePasswordAuthenticationFilter.class)
                 //.addFilterBefore(emailLoginFilter, UsernamePasswordAuthenticationFilter.class)
                 //.addFilterBefore(phoneLoginFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout.logoutUrl(SpringSecurityUtils.LOGOUT_URL).logoutSuccessHandler(globalAuthenticationHandler));

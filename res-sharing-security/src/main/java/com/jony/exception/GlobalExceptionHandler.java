@@ -21,11 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2022-12-25 11:43
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：全局异常
  */
 @Slf4j

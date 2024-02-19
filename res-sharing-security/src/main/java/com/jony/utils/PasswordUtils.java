@@ -8,13 +8,9 @@ import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2023-03-09 23:54
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：加解密 工具
- * <p></p>
  */
 public class PasswordUtils {
 

@@ -110,28 +110,26 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     /**
-     * 查询所有权限菜单及其拥有的角色列表
+     * 查询所有权限菜单 和 拥有该权限的角色列表
      *
      * @return 权限菜单列表
      */
     @Override
     public List<PermissionCacheDto> findCachePermissionList() {
-        LambdaQueryWrapper<SysMenu> permissionQueryWrapper = Wrappers.lambdaQuery();
+        LambdaQueryWrapper<SysMenu> permissionQueryWrapper = new LambdaQueryWrapper<>();
         List<SysMenu> permissions = menuMapper.selectList(permissionQueryWrapper);
 
         return permissions.stream()
                 .map(permission -> {
                     // 查询拥有该权限的角色列表
-                    List<SysRole> roles = findRolesByPermissionId(permission.getId());
+                    List<RoleCacheDto> roleCacheDtoList = findRolesByPermissionId(permission.getId());
 
                     // 将查询结果封装为PermissionCacheDto对象
                     PermissionCacheDto permissionCacheDto = new PermissionCacheDto();
                     permissionCacheDto.setPermissionCode(permission.getAuthority());
                     permissionCacheDto.setPermissionUrl(permission.getUrl());
-                    permissionCacheDto.setIsNeedAuthorization(Boolean.valueOf(permission.getIsNeedAuthorization()));
-                    permissionCacheDto.setRoleCacheDtoList(roles.stream()
-                            .map(role -> new RoleCacheDto(role.getRoleCode()))
-                            .collect(Collectors.toList()));
+                    permissionCacheDto.setIsNeedAuthorization(Boolean.parseBoolean(permission.getIsNeedAuthorization()));
+                    permissionCacheDto.setRoleCacheDtoList(roleCacheDtoList);
 
                     return permissionCacheDto;
                 })
@@ -144,7 +142,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @param permissionId 权限ID
      * @return 拥有该权限的角色列表
      */
-    private List<SysRole> findRolesByPermissionId(Long permissionId) {
+    private List<RoleCacheDto> findRolesByPermissionId(Long permissionId) {
         LambdaQueryWrapper<SysRoleMenu> rolePermissionQueryWrapper = new LambdaQueryWrapper<>();
         rolePermissionQueryWrapper.eq(SysRoleMenu::getMenuId, permissionId);
 
@@ -154,9 +152,21 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                 .map(SysRoleMenu::getRoleId)
                 .collect(Collectors.toList());
 
-        LambdaQueryWrapper<SysRole> roleQueryWrapper = Wrappers.lambdaQuery();
-        roleQueryWrapper.in(SysRole::getId, roleIds);
-        return roleMapper.selectList(roleQueryWrapper);
+        // LambdaQueryWrapper<SysRole> roleQueryWrapper = new LambdaQueryWrapper<>();
+        // roleQueryWrapper.in(SysRole::getId, roleIds);
+        // List<SysRole> sysRoles = roleMapper.selectList(roleQueryWrapper);
+
+        List<SysRole> sysRoleList = new ArrayList<>();
+        for (Long roleId : roleIds) {
+            SysRole sysRole = roleMapper.selectById(roleId);
+            sysRoleList.add(sysRole);
+        }
+
+        List<RoleCacheDto> roleCacheDtoList = sysRoleList.stream()
+                .map(role -> new RoleCacheDto(role.getRoleCode()))
+                .collect(Collectors.toList());
+
+        return roleCacheDtoList;
     }
 
 }

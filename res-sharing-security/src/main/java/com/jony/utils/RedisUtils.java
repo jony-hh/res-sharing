@@ -17,13 +17,9 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author ：谁书-ss
+ * @author jony
  * @date ：2023-03-09 21:54
- * @IDE ：IntelliJ IDEA
- * @Motto ：ABC(Always Be Coding)
- * <p></p>
  * @description ：Redis 工具类
- * <p></p>
  */
 @Component
 @RequiredArgsConstructor
