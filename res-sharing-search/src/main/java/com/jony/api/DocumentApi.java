@@ -103,9 +103,9 @@ public class DocumentApi {
      * 获取索引下所有文档信息
      *
      * @param indexName 索引名
-     * @param clazz 要查询的文档对象class
+     * @param clazz     要查询的文档对象class
+     * @param <T>       文档对象泛型
      * @return 文档对象泛型列表
-     * @param <T> 文档对象泛型
      * @throws IOException 异常信息
      */
     public <T> List<T> getAllDocument(String indexName, Class<T> clazz) throws IOException {
@@ -120,9 +120,9 @@ public class DocumentApi {
      * 获取索引下所有文档id
      *
      * @param indexName 索引名
-     * @param clazz 要查询的文档对象class
+     * @param clazz     要查询的文档对象class
+     * @param <T>       文档对象泛型
      * @return 文档对象id列表
-     * @param <T> 文档对象泛型
      * @throws IOException 异常信息
      */
     public <T> List<String> getAllDocumentIds(String indexName, Class<T> clazz) throws IOException {
@@ -154,7 +154,7 @@ public class DocumentApi {
      * 删除所有文档信息
      *
      * @param indexName 索引名
-     * @param clazz 文档对象泛型的class
+     * @param clazz     文档对象泛型的class
      * @param <T>       文档对象泛型
      * @return 删除是否成功
      * @throws IOException 异常信息
@@ -199,7 +199,7 @@ public class DocumentApi {
      * 批量删除文档
      *
      * @param indexName 索引名
-     * @param ids      批量删除的文档id的列表
+     * @param ids       批量删除的文档id的列表
      * @param <T>       文档对象泛型
      * @return 批量删除是否成功
      * @throws IOException 异常信息
@@ -231,8 +231,8 @@ public class DocumentApi {
      * 获取Hit对象列表
      *
      * @param response SearchResponse对象
+     * @param <T>      文档对象泛型
      * @return 文档对象Hit泛型列表
-     * @param <T> 文档对象泛型
      */
     private <T> List<Hit<T>> getHitList(SearchResponse<T> response) {
         log.info("consume times {} mill second", response.took());

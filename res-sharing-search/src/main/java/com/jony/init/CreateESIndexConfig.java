@@ -28,12 +28,13 @@ public class CreateESIndexConfig implements CommandLineRunner {
     @Autowired
     private ElasticSearchConfigProperties elasticSearchConfigProperties;
 
-	//json文件存储路径为：src/main/resources/es-settings/es_settings.json
+    // json文件存储路径为：src/main/resources/es-settings/es_settings.json
     @Value("classpath:es-settings/test1.json")
     private Resource esSetting;
 
     /**
      * 项目启动的时候，如果elasticsearch已经存有索引，则不做任何操作，如果没有索引，则新建索引
+     *
      * @param args
      * @throws Exception
      */
@@ -41,12 +42,18 @@ public class CreateESIndexConfig implements CommandLineRunner {
     public void run(String... args) throws Exception {
         log.info("[ES]开始创建索引{}...", "test_index");
         String indexName = elasticSearchConfigProperties.getIndex();
-        //读取json文件内的字符内容
+        boolean existedIndex = indexApi.isExistedIndex(indexName);
+        // 有索引直接返回
+        if (existedIndex) {
+            log.info(indexName + "索引已创建，不需要初始化");
+            return;
+        }
+        // 没有索引，读取json文件内的字符内容
         InputStream stream = esSetting.getInputStream();
         String esSettingStr = IOUtils.toString(stream, Charset.forName("utf-8"));
         boolean isCreated = indexApi.createIndexWithMapping(indexName, esSettingStr);
         if (isCreated) {
-            System.out.println("test1索引创建成功");
+            log.info(indexName + "索引初始化成功");
         }
     }
 }

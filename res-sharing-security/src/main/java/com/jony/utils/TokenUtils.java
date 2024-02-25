@@ -253,10 +253,11 @@ public class TokenUtils {
         if (StrUtil.isEmpty(token)) {
             return;
         }
-        logout(token,rememberMeToken);
+        Long userId = getUserInfoVo(request).getId();
+        logout(token,rememberMeToken,userId);
     }
 
-    public void logout(String authToken, String rememberMeToken) {
+    public void logout(String authToken, String rememberMeToken, Long userId) {
         // 当前登录客户端的 总人数
         Map<Long, List<AuthTokenCacheDto>> userAllAuthTokenMap = getUserAllAuthTokenList(authToken, rememberMeToken);
         Set<Long> userIds = userAllAuthTokenMap.keySet();
@@ -269,6 +270,7 @@ public class TokenUtils {
         // 当前登录 authToken
         if (StringUtils.hasText(authToken)) {
             redisUtils.del(RedisKeyEnum.GROUP_AUTH_TOKEN.getKey() + authToken);
+            redisUtils.del(RedisKeyEnum.GROUP_CURRENT_ONLINE_USER.getKey() + userId);
         }
         // 记住我 rememberMeToken
         if (StringUtils.hasText(rememberMeToken)) {

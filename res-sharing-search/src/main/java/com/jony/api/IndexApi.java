@@ -9,6 +9,8 @@ import co.elastic.clients.elasticsearch.indices.*;
 import co.elastic.clients.elasticsearch.indices.get_mapping.IndexMappingRecord;
 import co.elastic.clients.json.JsonpMapper;
 import co.elastic.clients.transport.endpoints.BooleanResponse;
+import com.jony.exception.ErrorCode;
+import com.jony.exception.ServerException;
 import jakarta.annotation.Resource;
 import jakarta.json.Json;
 import jakarta.json.stream.JsonParser;
@@ -57,12 +59,18 @@ public class IndexApi {
      * @return 是否创建成功
      * @throws IOException 异常信息
      */
-    public boolean createIndex(String indexName) throws IOException {
-        if (isExistedIndex(indexName)) {
-            deleteIndex(indexName);
+    public boolean createIndex(String indexName) {
+        CreateIndexResponse createIndexResponse = null;
+        try {
+            if (isExistedIndex(indexName)) {
+                deleteIndex(indexName);
+            }
+            // 写法比RestHighLevelClient更加简洁
+            createIndexResponse = elasticsearchClient.indices().create(c -> c.index(indexName));
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new ServerException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
-        // 写法比RestHighLevelClient更加简洁
-        CreateIndexResponse createIndexResponse = elasticsearchClient.indices().create(c -> c.index(indexName));
 
         log.info("{} 索引创建是否成功: {}", indexName, createIndexResponse.acknowledged());
 
@@ -76,8 +84,14 @@ public class IndexApi {
      * @return 是否存在
      * @throws IOException 异常信息
      */
-    public boolean isExistedIndex(String indexName) throws IOException {
-        BooleanResponse booleanResponse = elasticsearchClient.indices().exists(e -> e.index(indexName));
+    public boolean isExistedIndex(String indexName) {
+        BooleanResponse booleanResponse = null;
+        try {
+            booleanResponse = elasticsearchClient.indices().exists(e -> e.index(indexName));
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new ServerException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
 
         log.info("{} 索引是否存在: {}", indexName, booleanResponse.value());
 
@@ -91,8 +105,14 @@ public class IndexApi {
      * @return 是否删除成功
      * @throws IOException 异常信息
      */
-    public boolean deleteIndex(String indexName) throws IOException {
-        DeleteIndexResponse deleteIndexResponse = elasticsearchClient.indices().delete(d -> d.index(indexName));
+    public boolean deleteIndex(String indexName) {
+        DeleteIndexResponse deleteIndexResponse = null;
+        try {
+            deleteIndexResponse = elasticsearchClient.indices().delete(d -> d.index(indexName));
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new ServerException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
 
         log.info("{} 索引是否被删除: {}", indexName, deleteIndexResponse.acknowledged());
 
@@ -106,17 +126,23 @@ public class IndexApi {
      * @return 是否创建成功
      * @throws IOException 异常信息
      */
-    public boolean createIndexWithMapping(String indexName, TypeMapping typeMapping) throws IOException {
+    public boolean createIndexWithMapping(String indexName, TypeMapping typeMapping) {
         if (isExistedIndex(indexName)) {
             deleteIndex(indexName);
         }
 
-        CreateIndexResponse createIndexResponse = elasticsearchClient
-                .indices()
-                .create(createIndexRequest -> createIndexRequest
-                        .index(indexName)
-                        // 用 lambda 的方式 下面的 mapping 会覆盖上面的 mapping
-                        .mappings(typeMapping));
+        CreateIndexResponse createIndexResponse = null;
+        try {
+            createIndexResponse = elasticsearchClient
+                    .indices()
+                    .create(createIndexRequest -> createIndexRequest
+                            .index(indexName)
+                            // 用 lambda 的方式 下面的 mapping 会覆盖上面的 mapping
+                            .mappings(typeMapping));
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new ServerException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
 
         log.info("{} 索引创建是否成功: {}", indexName, createIndexResponse.acknowledged());
 
@@ -126,12 +152,12 @@ public class IndexApi {
     /**
      * 创建索引 - 用json脚本创建mapping
      *
-     * @param indexName 索引名
+     * @param indexName     索引名
      * @param mappingScript mapping的json脚本
      * @return 是否创建成功
      * @throws IOException 异常信息
      */
-    public boolean createIndexWithMapping(String indexName, String mappingScript) throws IOException {
+    public boolean createIndexWithMapping(String indexName, String mappingScript) {
         if (isExistedIndex(indexName)) {
             deleteIndex(indexName);
         }
@@ -139,11 +165,17 @@ public class IndexApi {
         JsonpMapper mapper = elasticsearchClient._transport().jsonpMapper();
         JsonParser parser = Json.createParser(new StringReader(mappingScript));
 
-        CreateIndexResponse createIndexResponse = elasticsearchClient
-                .indices()
-                .create(createIndexRequest -> createIndexRequest
-                        .index(indexName)
-                        .mappings(TypeMapping._DESERIALIZER.deserialize(parser, mapper)));
+        CreateIndexResponse createIndexResponse = null;
+        try {
+            createIndexResponse = elasticsearchClient
+                    .indices()
+                    .create(createIndexRequest -> createIndexRequest
+                            .index(indexName)
+                            .mappings(TypeMapping._DESERIALIZER.deserialize(parser, mapper)));
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new ServerException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
 
         log.info("{} 索引创建是否成功: {}", indexName, createIndexResponse.acknowledged());
 
@@ -157,8 +189,14 @@ public class IndexApi {
      * @return GetIndexResponse对象
      * @throws IOException 异常信息
      */
-    public GetIndexResponse queryIndex(String indexName) throws IOException {
-        GetIndexResponse getIndexResponse = elasticsearchClient.indices().get(i -> i.index(indexName));
+    public GetIndexResponse queryIndex(String indexName) {
+        GetIndexResponse getIndexResponse = null;
+        try {
+            getIndexResponse = elasticsearchClient.indices().get(i -> i.index(indexName));
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new ServerException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
 
         log.info("{} 索引信息: {}", indexName, getIndexResponse);
 
@@ -172,9 +210,15 @@ public class IndexApi {
      * @return GetIndexResponse对象
      * @throws IOException 异常信息
      */
-    public Map<String, Property> queryIndexDetail(String indexName) throws IOException {
+    public Map<String, Property> queryIndexDetail(String indexName) {
         GetIndexResponse getIndexResponse =
-                elasticsearchClient.indices().get(getIndexRequest -> getIndexRequest.index(indexName));
+                null;
+        try {
+            getIndexResponse = elasticsearchClient.indices().get(getIndexRequest -> getIndexRequest.index(indexName));
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new ServerException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
 
         Map<String, Property> properties = Objects.requireNonNull(
                         Objects.requireNonNull(getIndexResponse.get(indexName)).mappings())
@@ -197,8 +241,13 @@ public class IndexApi {
      * @return IndicesRecord列表
      * @throws IOException 异常信息
      */
-    public List<IndicesRecord> getAllIndices() throws IOException {
-        List<IndicesRecord> indicesRecords = elasticsearchClient.cat().indices().valueBody();
+    public List<IndicesRecord> getAllIndices() {
+        List<IndicesRecord> indicesRecords = null;
+        try {
+            indicesRecords = elasticsearchClient.cat().indices().valueBody();
+        } catch (IOException e) {
+            throw new ServerException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
         log.info("size is:{}", indicesRecords.size());
 
         return indicesRecords;
@@ -211,8 +260,14 @@ public class IndexApi {
      * @return TypeMapping对象
      * @throws IOException 异常信息
      */
-    public TypeMapping getMapping(String indexName) throws IOException {
-        GetMappingResponse getMappingResponse = elasticsearchClient.indices().getMapping();
+    public TypeMapping getMapping(String indexName) {
+        GetMappingResponse getMappingResponse = null;
+        try {
+            getMappingResponse = elasticsearchClient.indices().getMapping();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new ServerException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
 
         TypeMapping typeMapping = getMappingResponse.result().get(indexName).mappings();
 
@@ -227,9 +282,15 @@ public class IndexApi {
      * @return Map<String, TypeMapping>对象，key就是索引名，value是TypeMapping对象
      * @throws IOException 异常信息
      */
-    public Map<String, TypeMapping> getAllMappings() throws IOException {
+    public Map<String, TypeMapping> getAllMappings() {
         Map<String, IndexMappingRecord> indexMappingRecordMap =
-                elasticsearchClient.indices().getMapping().result();
+                null;
+        try {
+            indexMappingRecordMap = elasticsearchClient.indices().getMapping().result();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new ServerException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
 
         Map<String, TypeMapping> result = new HashMap<>(indexMappingRecordMap.size());
 
@@ -251,8 +312,14 @@ public class IndexApi {
      * @return refresh是否成功，true成功 false失败
      * @throws IOException 异常信息
      */
-    public boolean refresh(String indexName) throws IOException {
-        RefreshResponse response = elasticsearchClient.indices().refresh(request -> request.index(indexName));
+    public boolean refresh(String indexName) {
+        RefreshResponse response = null;
+        try {
+            response = elasticsearchClient.indices().refresh(request -> request.index(indexName));
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new ServerException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
 
         return doOperation(response.shards());
     }
@@ -264,8 +331,14 @@ public class IndexApi {
      * @return flush是否成功，true成功 false失败
      * @throws IOException 异常信息
      */
-    public boolean flush(String indexName) throws IOException {
-        FlushResponse response = elasticsearchClient.indices().flush(request -> request.index(indexName));
+    public boolean flush(String indexName) {
+        FlushResponse response = null;
+        try {
+            response = elasticsearchClient.indices().flush(request -> request.index(indexName));
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new ServerException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
 
         return doOperation(response.shards());
     }

@@ -16,10 +16,15 @@ public class ServerException extends RuntimeException {
     private int code;
     private String msg;
 
-    public ServerException(String msg) {
+    public ServerException(int code,String msg) {
         super(msg);
-        this.code = ErrorCode.INTERNAL_SERVER_ERROR.getCode();
+        this.code = code;
         this.msg = msg;
+    }
+
+    public ServerException(String message) {
+        super(message);
+        this.msg = message;
     }
 
     public ServerException(ErrorCode errorCode) {

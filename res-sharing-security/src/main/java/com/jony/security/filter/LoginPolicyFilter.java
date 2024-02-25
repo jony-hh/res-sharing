@@ -88,7 +88,7 @@ public class LoginPolicyFilter extends OncePerRequestFilter {
                                 // 最早登录的 token
                                 String authToken = authTokenCacheDtoList.get(0).getAuthToken();
                                 // 删除缓存 token，强制退出
-                                tokenUtils.logout(authToken, null);
+                                tokenUtils.logout(authToken, null,userInfoVo.getId());
                                 // 重新设置 当前用户登录的 所有客户端token缓存
                                 authTokenCacheDtoList = authTokenCacheDtoList.stream().filter(t -> !t.getAuthToken().equals(authToken)).collect(Collectors.toList());
                                 tokenUtils.setUserAuthTokenList(userInfoVo.getId(), authTokenCacheDtoList);

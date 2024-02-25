@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  * @author jony
- * @description The type Search api.
+ * @description 搜索api.
  */
 @Slf4j
 @Component
@@ -31,8 +31,8 @@ public class QueryApi {
      * 获取Hit对象中source字符串
      *
      * @param response SearchResponse对象
+     * @param <T>      文档对象泛型
      * @return 文档对象泛型列表
-     * @param <T> 文档对象泛型
      */
     private <T> List<T> getSources(SearchResponse<T> response) {
         List<T> result = new ArrayList<>();
@@ -46,8 +46,8 @@ public class QueryApi {
      * 获取Hit对象中HighLight的Map列表
      *
      * @param response SearchResponse对象
-     * @return 文档对象HighLight的Map列表,key为HighLight字段名，value为HighLight内容
-     * @param <T> 文档对象泛型
+     * @param <T>      文档对象泛型
+     * @return 文档对象HighLight的Map列表, key为HighLight字段名，value为HighLight内容
      */
     private <T> List<Map<String, List<String>>> getHighLights(SearchResponse<T> response) {
         return getHitList(response).stream().map(Hit::highlight).toList();
@@ -57,8 +57,8 @@ public class QueryApi {
      * 获取Hit对象列表
      *
      * @param response SearchResponse对象
+     * @param <T>      文档对象泛型
      * @return 文档对象Hit泛型列表
-     * @param <T> 文档对象泛型
      */
     private <T> List<Hit<T>> getHitList(SearchResponse<T> response) {
         log.info("consume times {} mill second", response.took());
@@ -75,10 +75,10 @@ public class QueryApi {
     /**
      * 指定id检索数据
      *
-     * @param <T>        文档对象泛型
+     * @param <T>       文档对象泛型
      * @param indexName 索引名
-     * @param id 文档id
-     * @param clazz 要搜索的文档对象class
+     * @param id        文档id
+     * @param clazz     要搜索的文档对象class
      * @return GetResponse对象 get response
      * @throws IOException 异常信息
      */
@@ -96,11 +96,11 @@ public class QueryApi {
     /**
      * 聚合操作
      *
-     * @param indexName 索引名
-     * @param searchText 搜索内容
-     * @param searchField 搜索字段
-     * @param aggsField 聚合字段
-     * @param aggsKey 聚合key
+     * @param indexName     索引名
+     * @param searchText    搜索内容
+     * @param searchField   搜索字段
+     * @param aggsField     聚合字段
+     * @param aggsKey       聚合key
      * @param intervalValue 间隔值
      * @return HistogramBucket列表 list
      * @throws IOException 异常信息
@@ -130,13 +130,13 @@ public class QueryApi {
     /**
      * matchAllQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
+     * @param <T>         文档对象泛型
+     * @param indexName   索引名
      * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param fromIndex   分页数据从第几页开始取
+     * @param pageSize    每页取多少条数据
+     * @param isDesc      是否降序，true降序，false升序
+     * @param clazz       要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -160,15 +160,15 @@ public class QueryApi {
     /**
      * matchQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
-     * @param searchText 搜索内容
+     * @param <T>         文档对象泛型
+     * @param indexName   索引名
+     * @param searchText  搜索内容
      * @param searchField 要搜索的字段
      * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param fromIndex   分页数据从第几页开始取
+     * @param pageSize    每页取多少条数据
+     * @param isDesc      是否降序，true降序，false升序
+     * @param clazz       要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -199,14 +199,14 @@ public class QueryApi {
      * multiMatchQuery方法
      *
      * @param <T>          文档对象泛型
-     * @param indexName 索引名
-     * @param searchText 搜索内容
+     * @param indexName    索引名
+     * @param searchText   搜索内容
      * @param searchFields 要搜索的字段列表
-     * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param sortedField  要排序的字段
+     * @param fromIndex    分页数据从第几页开始取
+     * @param pageSize     每页取多少条数据
+     * @param isDesc       是否降序，true降序，false升序
+     * @param clazz        要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -236,15 +236,15 @@ public class QueryApi {
     /**
      * matchPhrasePrefixQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
-     * @param searchText 搜索内容
+     * @param <T>         文档对象泛型
+     * @param indexName   索引名
+     * @param searchText  搜索内容
      * @param searchField 要搜索的字段
      * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param fromIndex   分页数据从第几页开始取
+     * @param pageSize    每页取多少条数据
+     * @param isDesc      是否降序，true降序，false升序
+     * @param clazz       要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -275,14 +275,14 @@ public class QueryApi {
     /**
      * idsQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
+     * @param <T>         文档对象泛型
+     * @param indexName   索引名
      * @param searchTexts 搜索内容列表
      * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param fromIndex   分页数据从第几页开始取
+     * @param pageSize    每页取多少条数据
+     * @param isDesc      是否降序，true降序，false升序
+     * @param clazz       要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -311,15 +311,15 @@ public class QueryApi {
     /**
      * termQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
-     * @param searchText 搜索内容
+     * @param <T>         文档对象泛型
+     * @param indexName   索引名
+     * @param searchText  搜索内容
      * @param searchField 要搜索的字段
      * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param fromIndex   分页数据从第几页开始取
+     * @param pageSize    每页取多少条数据
+     * @param isDesc      是否降序，true降序，false升序
+     * @param clazz       要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -349,15 +349,15 @@ public class QueryApi {
     /**
      * fuzzyQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
-     * @param searchText 搜索内容
+     * @param <T>         文档对象泛型
+     * @param indexName   索引名
+     * @param searchText  搜索内容
      * @param searchField 要搜索的字段
      * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param fromIndex   分页数据从第几页开始取
+     * @param pageSize    每页取多少条数据
+     * @param isDesc      是否降序，true降序，false升序
+     * @param clazz       要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -387,16 +387,16 @@ public class QueryApi {
     /**
      * rangeQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
+     * @param <T>            文档对象泛型
+     * @param indexName      索引名
      * @param fromSearchText 开始搜索的内容
-     * @param toSearchText 完成搜索的内容
-     * @param searchField 要搜索的字段
-     * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param toSearchText   完成搜索的内容
+     * @param searchField    要搜索的字段
+     * @param sortedField    要排序的字段
+     * @param fromIndex      分页数据从第几页开始取
+     * @param pageSize       每页取多少条数据
+     * @param isDesc         是否降序，true降序，false升序
+     * @param clazz          要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -428,15 +428,15 @@ public class QueryApi {
     /**
      * wildcardQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
-     * @param searchText 搜索内容
+     * @param <T>         文档对象泛型
+     * @param indexName   索引名
+     * @param searchText  搜索内容
      * @param searchField 要搜索的字段
      * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param fromIndex   分页数据从第几页开始取
+     * @param pageSize    每页取多少条数据
+     * @param isDesc      是否降序，true降序，false升序
+     * @param clazz       要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -466,16 +466,16 @@ public class QueryApi {
     /**
      * constantScoreQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
-     * @param searchText 搜索内容
+     * @param <T>         文档对象泛型
+     * @param indexName   索引名
+     * @param searchText  搜索内容
      * @param searchField 要搜索的字段
-     * @param boost  boost计分
+     * @param boost       boost计分
      * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param fromIndex   分页数据从第几页开始取
+     * @param pageSize    每页取多少条数据
+     * @param isDesc      是否降序，true降序，false升序
+     * @param clazz       要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -510,16 +510,16 @@ public class QueryApi {
     /**
      * disMaxQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
-     * @param queries 内嵌的query对象列表
-     * @param boost  boost计分
-     * @param tieBreaker tieBreaker
+     * @param <T>         文档对象泛型
+     * @param indexName   索引名
+     * @param queries     内嵌的query对象列表
+     * @param boost       boost计分
+     * @param tieBreaker  tieBreaker
      * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param fromIndex   分页数据从第几页开始取
+     * @param pageSize    每页取多少条数据
+     * @param isDesc      是否降序，true降序，false升序
+     * @param clazz       要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -552,17 +552,16 @@ public class QueryApi {
     }
 
     /**
-     *
      * queryStringQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
-     * @param searchText 搜索内容
+     * @param <T>         文档对象泛型
+     * @param indexName   索引名
+     * @param searchText  搜索内容
      * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param fromIndex   分页数据从第几页开始取
+     * @param pageSize    每页取多少条数据
+     * @param isDesc      是否降序，true降序，false升序
+     * @param clazz       要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -591,16 +590,16 @@ public class QueryApi {
     /**
      * spanFirstQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
-     * @param searchText 搜索内容
+     * @param <T>         文档对象泛型
+     * @param indexName   索引名
+     * @param searchText  搜索内容
      * @param searchField 要搜索的字段
-     * @param end end
+     * @param end         end
      * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param fromIndex   分页数据从第几页开始取
+     * @param pageSize    每页取多少条数据
+     * @param isDesc      是否降序，true降序，false升序
+     * @param clazz       要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -633,15 +632,15 @@ public class QueryApi {
     /**
      * spanTermQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
-     * @param searchText 搜索内容
+     * @param <T>         文档对象泛型
+     * @param indexName   索引名
+     * @param searchText  搜索内容
      * @param searchField 要搜索的字段
      * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param fromIndex   分页数据从第几页开始取
+     * @param pageSize    每页取多少条数据
+     * @param isDesc      是否降序，true降序，false升序
+     * @param clazz       要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -670,14 +669,14 @@ public class QueryApi {
     /**
      * boolQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
-     * @param queries 内嵌的query对象列表
+     * @param <T>         文档对象泛型
+     * @param indexName   索引名
+     * @param queries     内嵌的query对象列表
      * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param fromIndex   分页数据从第几页开始取
+     * @param pageSize    每页取多少条数据
+     * @param isDesc      是否降序，true降序，false升序
+     * @param clazz       要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -706,16 +705,16 @@ public class QueryApi {
     /**
      * nestedQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
-     * @param path path
-     * @param query 内嵌的query对象
+     * @param <T>            文档对象泛型
+     * @param indexName      索引名
+     * @param path           path
+     * @param query          内嵌的query对象
      * @param childScoreMode ChildScoreMode枚举类值
-     * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param sortedField    要排序的字段
+     * @param fromIndex      分页数据从第几页开始取
+     * @param pageSize       每页取多少条数据
+     * @param isDesc         是否降序，true降序，false升序
+     * @param clazz          要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
@@ -746,17 +745,17 @@ public class QueryApi {
     /**
      * highLightQuery方法
      *
-     * @param <T>          文档对象泛型
-     * @param indexName 索引名
-     * @param query 内嵌的query对象
+     * @param <T>            文档对象泛型
+     * @param indexName      索引名
+     * @param query          内嵌的query对象
      * @param highlightField 高亮查询字段
-     * @param preTags 高亮前置部分
-     * @param postTags 高亮后置部分
-     * @param sortedField 要排序的字段
-     * @param fromIndex 分页数据从第几页开始取
-     * @param pageSize 每页取多少条数据
-     * @param isDesc 是否降序，true降序，false升序
-     * @param clazz 要搜索的文档对象class
+     * @param preTags        高亮前置部分
+     * @param postTags       高亮后置部分
+     * @param sortedField    要排序的字段
+     * @param fromIndex      分页数据从第几页开始取
+     * @param pageSize       每页取多少条数据
+     * @param isDesc         是否降序，true降序，false升序
+     * @param clazz          要搜索的文档对象class
      * @return 泛型对象列表集合 list
      * @throws IOException 异常信息
      */
