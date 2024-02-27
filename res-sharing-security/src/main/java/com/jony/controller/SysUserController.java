@@ -2,11 +2,13 @@ package com.jony.controller;
 
 
 import com.jony.api.CommonResult;
+import com.jony.api.ResultCode;
 import com.jony.security.vo.UserInfoVo;
 import com.jony.service.SysUserService;
 import com.jony.utils.TokenUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,9 +37,8 @@ public class SysUserController {
 
     @PostMapping("logout")
     public CommonResult<String> logout(HttpServletRequest request) {
-        System.out.println("退出登录----------- logout");
         tokenUtils.logout(request);
-        return CommonResult.success("退出登录成功", null);
+        return CommonResult.success(null, ResultCode.LOGOUT_SUCCESS.getMessage());
     }
 }
 

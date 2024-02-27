@@ -3,6 +3,7 @@ package com.jony.security.handler;
 
 import com.jony.exception.ApiResponse;
 import com.jony.utils.ResponseUtils;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,8 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.session.SessionInformationExpiredEvent;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 
 /**
@@ -41,9 +44,13 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class GlobalAuthenticationHandler implements AuthenticationSuccessHandler, AuthenticationFailureHandler,
-        LogoutSuccessHandler, SessionInformationExpiredStrategy,
-        AccessDeniedHandler, AuthenticationEntryPoint {
+public class GlobalAuthenticationHandler implements
+        AuthenticationSuccessHandler,
+        AuthenticationFailureHandler,
+        LogoutSuccessHandler,
+        SessionInformationExpiredStrategy,
+        AccessDeniedHandler,
+        AuthenticationEntryPoint {
 
 
     /**
@@ -55,7 +62,7 @@ public class GlobalAuthenticationHandler implements AuthenticationSuccessHandler
      *                       the authentication process.
      */
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("登录成功：{}", authentication.getPrincipal());
         ResponseUtils.responseJson(response, ApiResponse.of(HttpStatus.OK.value(), "登录成功"));
     }
@@ -69,7 +76,7 @@ public class GlobalAuthenticationHandler implements AuthenticationSuccessHandler
      *                  request.
      */
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         log.warn("登录失败：{}", exception.getLocalizedMessage());
         ResponseUtils.responseJson(response, ApiResponse.of(HttpStatus.UNAUTHORIZED.value(), "登录失败"));
     }
@@ -83,7 +90,7 @@ public class GlobalAuthenticationHandler implements AuthenticationSuccessHandler
      */
 
     @Override
-    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("注销成功：{}", authentication.getPrincipal());
         ResponseUtils.responseJson(response, ApiResponse.of(ApiResponse.Type.UN_AUTH.value(), "注销成功"));
     }
@@ -94,7 +101,7 @@ public class GlobalAuthenticationHandler implements AuthenticationSuccessHandler
      * @param event 会话过期事件
      */
     @Override
-    public void onExpiredSessionDetected(SessionInformationExpiredEvent event) {
+    public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException, ServletException {
         log.warn("登录已过期，请重新登录");
         ResponseUtils.responseJson(event.getResponse(), ApiResponse.of(HttpStatus.UNAUTHORIZED.value(), "登录已过期，请重新登录"));
     }
@@ -107,23 +114,24 @@ public class GlobalAuthenticationHandler implements AuthenticationSuccessHandler
      * @param accessDeniedException that caused the invocation
      */
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) {
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         log.warn("无权限访问：{}", accessDeniedException.getMessage());
         ResponseUtils.responseJson(response, ApiResponse.of(HttpStatus.FORBIDDEN.value(), "无权限访问"));
     }
 
     /**
-     * 用来解决匿名（无认证）用户访问 无权限资源时的异常
+     * 用来解决匿名（未认证）用户访问 无权限资源时的异常
      *
      * @param request       that resulted in an <code>AuthenticationException</code>
      * @param response      so that the user agent can begin authentication
      * @param authException that caused the invocation
      */
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         log.warn("请先登录，再访问资源：{}", authException.getMessage());
         ResponseUtils.responseJson(response, ApiResponse.of(HttpStatus.UNAUTHORIZED.value(), "请先登录，再访问资源"));
     }
+
 
 }
 

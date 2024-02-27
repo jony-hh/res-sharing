@@ -1,5 +1,6 @@
 package com.jony.api;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jony.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonResult<T> {
     /**
      * 状态码

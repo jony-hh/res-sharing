@@ -1,19 +1,19 @@
 package com.jony.exception;
 
 
+import lombok.Getter;
+
 /**
  * @author jony
  * @date ：2022-12-25 11:34
  * @description ：
  */
+@Getter
 public class BusinessException extends RuntimeException{
+
     private Object data;
 
     private Integer code;
-
-    public Object getData() {
-        return data;
-    }
 
     public void setData(Object data) {
         this.data = data;

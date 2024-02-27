@@ -2,8 +2,8 @@ package com.jony.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +22,15 @@ public class HedgeController {
 
     @GetMapping("/index")
     @Operation(summary = "启动测试")
+    @PreAuthorize("hasAuthority('sys:user:index')")
     public String index() {
         return "您好，项目已启动，祝您使用愉快！";
     }
 
     @PostMapping("/modify")
     @Operation(summary = "修改系统用户密码")
-    public String modify(@RequestParam String pwd,@RequestParam int id){
+    @PreAuthorize("hasAuthority('sys:user:update')")
+    public String modify(String pwd,Integer id){
         return "修改成功！";
     }
 }

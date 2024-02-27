@@ -1,0 +1,4 @@
+auth:
+  authenticate_urls:
+    - /api/qa/send
+    - /api/res/upload

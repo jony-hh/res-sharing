@@ -271,6 +271,8 @@ public class TokenUtils {
         if (StringUtils.hasText(authToken)) {
             redisUtils.del(RedisKeyEnum.GROUP_AUTH_TOKEN.getKey() + authToken);
             redisUtils.del(RedisKeyEnum.GROUP_CURRENT_ONLINE_USER.getKey() + userId);
+            redisUtils.del(RedisKeyEnum.KEY_PERMISSION_URL_LIST.getKey() + userId);
+
         }
         // 记住我 rememberMeToken
         if (StringUtils.hasText(rememberMeToken)) {

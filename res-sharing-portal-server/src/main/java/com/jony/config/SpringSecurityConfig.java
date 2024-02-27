@@ -1,13 +1,14 @@
-package com.jony.security.config;
+package com.jony.config;
 
 
 import com.jony.security.filter.*;
 import com.jony.security.handler.GlobalAuthenticationHandler;
-import com.jony.security.utils.SpringSecurityUtils;
 import com.jony.security.manager.DynamicAuthorizationManager;
+import com.jony.security.utils.SpringSecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SpringSecurityConfig {
 
@@ -52,8 +54,8 @@ public class SpringSecurityConfig {
 
         httpSecurity.authorizeHttpRequests(authorizeHttpRequests ->
                 authorizeHttpRequests
-                        .requestMatchers(SpringSecurityUtils.ignoreUrlArray()).permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers(SpringSecurityUtils.authenticateUrlArray()).authenticated()
+                        .anyRequest().permitAll()
         );
 
         httpSecurity

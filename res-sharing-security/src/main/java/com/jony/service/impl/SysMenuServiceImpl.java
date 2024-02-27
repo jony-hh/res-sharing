@@ -2,7 +2,6 @@ package com.jony.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jony.entity.SysRole;
 import com.jony.entity.SysRoleMenu;
@@ -40,7 +39,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      *
      * @return List<SysMenu>
      */
-    public Set<String> findPermissionInfo(){
+    public Set<String> findPermissionInfo() {
         List<SysMenu> menuList = this.list();
         Set<String> authorityList = menuList.stream()
                 .map(SysMenu::getAuthority)
@@ -59,6 +58,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     /**
      * 通过角色列表查询所有权限
+     *
      * @param roleIdList
      * @return List<SysMenu>
      */
@@ -128,7 +128,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                     PermissionCacheDto permissionCacheDto = new PermissionCacheDto();
                     permissionCacheDto.setPermissionCode(permission.getAuthority());
                     permissionCacheDto.setPermissionUrl(permission.getUrl());
-                    permissionCacheDto.setIsNeedAuthorization(Boolean.parseBoolean(permission.getIsNeedAuthorization()));
+                    permissionCacheDto.setIsNeedAuthorization(permission.getIsNeedAuthorization().equals("true") ? Boolean.TRUE : Boolean.FALSE);
                     permissionCacheDto.setRoleCacheDtoList(roleCacheDtoList);
 
                     return permissionCacheDto;

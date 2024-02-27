@@ -116,7 +116,13 @@ public class UserInfoVo implements UserDetails {
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authoritySet.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+        if (!authoritySet.isEmpty()) {
+            Set<SimpleGrantedAuthority> authorities = authoritySet.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toSet());
+            return authorities;
+        }
+        return null;
     }
 
     @JsonIgnore
