@@ -1,4 +1,4 @@
-package com.jony.security.config;
+package com.jony.config;
 
 
 import com.jony.security.cache.ResourceService;

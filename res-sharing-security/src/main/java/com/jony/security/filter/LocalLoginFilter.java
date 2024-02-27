@@ -57,6 +57,13 @@ public class LocalLoginFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        // 放行不需要认证的【前台接口】
+        if (requestUri.contains(SpringSecurityUtils.PORTAL_ADMIN_URL)) {
+            if (!SpringSecurityUtils.existsInAuthenticateUrlArray(requestUri)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+        }
         // 需要认证的URL，token过期无效
         if (userInfoVo == null) {
             ResponseUtils.responseJson(response, new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), "请先登录，再访问资源"));

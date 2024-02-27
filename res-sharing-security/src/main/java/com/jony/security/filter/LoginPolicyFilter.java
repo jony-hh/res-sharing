@@ -52,9 +52,9 @@ public class LoginPolicyFilter extends OncePerRequestFilter {
         RequestWrapper requestWrapper = new RequestWrapper(request);
         // 获取URI
         String requestUri = request.getRequestURI();
-        if (SpringSecurityUtils.LOGIN_URL_LOCAL.contains(requestUri) ||
-                SpringSecurityUtils.LOGIN_URL_EMAIL.contains(requestUri) ||
-                SpringSecurityUtils.LOGIN_URL_PHONE.contains(requestUri)) {
+        if (requestUri.contains(SpringSecurityUtils.LOGIN_URL_LOCAL) ||
+                requestUri.contains(SpringSecurityUtils.LOGIN_URL_EMAIL) ||
+                requestUri.contains(SpringSecurityUtils.LOGIN_URL_PHONE)) {
             if (HttpMethod.POST.matches(request.getMethod())) {
                 // 没有token，不是当前客户端
                 if (!tokenUtils.hasAuthToken(request)) {

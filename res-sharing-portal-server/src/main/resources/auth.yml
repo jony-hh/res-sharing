@@ -1,4 +1,4 @@
 auth:
   authenticate_urls:
-    - /api/qa/send
-    - /api/res/upload
+    - /qa/send
+    - /res/upload

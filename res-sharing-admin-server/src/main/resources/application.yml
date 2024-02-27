@@ -7,7 +7,7 @@ server:
       min-spare: 30
   port: 8866
   servlet:
-    context-path: /api
+    context-path: /admin/api
     session:
       cookie:
         http-only: true

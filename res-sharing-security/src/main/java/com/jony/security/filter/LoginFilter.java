@@ -67,9 +67,9 @@ public class LoginFilter extends OncePerRequestFilter {
         log.info("【LoginFilter 过滤器】执行doFilterInternal()方法");
         // 获取URI
         String requestUri = request.getRequestURI();
-        if (SpringSecurityUtils.LOGIN_URL_LOCAL.contains(requestUri) ||
-                SpringSecurityUtils.LOGIN_URL_EMAIL.contains(requestUri) ||
-                SpringSecurityUtils.LOGIN_URL_PHONE.contains(requestUri)) {
+        if (requestUri.contains(SpringSecurityUtils.LOGIN_URL_LOCAL) ||
+                requestUri.contains(SpringSecurityUtils.LOGIN_URL_EMAIL) ||
+                requestUri.contains(SpringSecurityUtils.LOGIN_URL_PHONE)) {
             if (!HttpMethod.POST.matches(request.getMethod())) {
                 ResponseUtils.responseJson(response, new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), "不支持的请求方式"));
                 return;
@@ -89,6 +89,13 @@ public class LoginFilter extends OncePerRequestFilter {
         if (SpringSecurityUtils.existsInIgnoreUrlArray(requestUri) || SpringSecurityUtils.existsInIgnoreUrlArrayForDb(requestUri, isNotAuthorizationUrlList)) {
             filterChain.doFilter(request, response);
             return;
+        }
+        // 放行不需要认证的【前台接口】
+        if (requestUri.contains(SpringSecurityUtils.PORTAL_ADMIN_URL)) {
+            if (!SpringSecurityUtils.existsInAuthenticateUrlArray(requestUri)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
         }
         // 需要认证的URL，token过期无效
         if (userInfoVo == null) {

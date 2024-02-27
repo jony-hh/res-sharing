@@ -28,7 +28,7 @@ public class SpringSecurityUtils {
     public static final String LOGIN_URL_LOCAL = "/api/sys/auth/local";
     public static final String LOGIN_URL_EMAIL = "/api/sys/auth/email";
     public static final String LOGIN_URL_PHONE = "/api/sys/auth/phone";
-
+    public static final String PORTAL_ADMIN_URL = "/portal/api";
     public static final String LOGIN_USERNAME_KEY = "userAuthIdentifier";
     public static final String LOGIN_USERNAME_FRONT_KEY = "username";
     public static final String LOGIN_PASSWORD_KEY = "userAuthCredential";
@@ -38,12 +38,13 @@ public class SpringSecurityUtils {
 
     public static String getAuthType(String uri) {
         if (StringUtils.hasText(uri)) {
-            return switch (uri) {
-                case LOGIN_URL_LOCAL -> UserEnum.AuthType.LOCAL.getType();
-                case LOGIN_URL_EMAIL -> UserEnum.AuthType.EMAIL.getType();
-                case LOGIN_URL_PHONE -> UserEnum.AuthType.PHONE.getType();
-                default -> null;
-            };
+            if (uri.contains(LOGIN_URL_LOCAL)) {
+                return UserEnum.AuthType.LOCAL.getType();
+            }else if (uri.contains(LOGIN_URL_EMAIL)){
+                return UserEnum.AuthType.EMAIL.getType();
+            } else if (uri.contains(LOGIN_URL_PHONE)) {
+                return UserEnum.AuthType.PHONE.getType();
+            }
         }
         return null;
     }
@@ -63,6 +64,15 @@ public class SpringSecurityUtils {
     public static boolean existsInIgnoreUrlArray(String requestUri) {
         for (String ignoreUrl : ignoreUrlArray()) {
             if (requestUri.contains(ignoreUrl.replace("/**", ""))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean existsInAuthenticateUrlArray(String requestUri) {
+        for (String authenticateUrl : authenticateUrlArray()) {
+            if (requestUri.contains(authenticateUrl.replace("/**", ""))) {
                 return true;
             }
         }
