@@ -2,6 +2,7 @@ package com.jony.security.utils;
 
 import com.jony.enums.UserEnum;
 import com.jony.exception.BusinessException;
+import com.jony.security.config.PermitResource;
 import com.jony.security.token.EmailAuthenticationToken;
 import com.jony.security.token.LocalAuthenticationToken;
 import com.jony.security.token.PhoneAuthenticationToken;
@@ -48,14 +49,8 @@ public class SpringSecurityUtils {
 
     public static String[] ignoreUrlArray() {
         //yml配置文件有访问前缀context-path  SpringSecurity 这里就不能加前缀
-        return new String[]{
-                "/doc.html",
-                "/webjars/**",
-                "/v3/api-docs/**",
-                //加前缀，是为了过滤器判断使用
-                "/api/sys/auth/**",
-                "/sys/auth/**"
-        };
+        List<String> permitList = PermitResource.getPermitList();
+        return permitList.toArray(new String[0]);
     }
 
     public static boolean existsInIgnoreUrlArray(String requestUri) {
