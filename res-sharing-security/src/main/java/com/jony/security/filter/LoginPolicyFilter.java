@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
  * {@link UserEnum.LoginPolicy}
  */
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class LoginPolicyFilter extends OncePerRequestFilter {
     private final LoginPolicyConfig loginPolicyConfig;

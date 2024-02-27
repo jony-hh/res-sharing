@@ -48,6 +48,10 @@ public class CommonResult<T> {
         return new CommonResult<T>(ResultCode.SUCCESS.getCode(), message, data);
     }
 
+    public static <T> CommonResult<T> success(ResultCode resultCode) {
+        return new CommonResult<T>(resultCode.getCode(), resultCode.getMessage(), null);
+    }
+
     // endregion
 
     // region 异常返回结果

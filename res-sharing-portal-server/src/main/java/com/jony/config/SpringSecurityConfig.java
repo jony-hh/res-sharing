@@ -1,16 +1,21 @@
 package com.jony.config;
 
 
+import com.jony.security.cache.ResourceService;
+import com.jony.security.config.LoginPolicyConfig;
 import com.jony.security.filter.*;
 import com.jony.security.handler.GlobalAuthenticationHandler;
 import com.jony.security.manager.DynamicAuthorizationManager;
 import com.jony.security.utils.SpringSecurityUtils;
+import com.jony.service.SysUserService;
+import com.jony.utils.TokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -32,52 +37,44 @@ public class SpringSecurityConfig {
      * 不同的登录类型，可以创建不同类型的过滤器分别处理，
      * 也可以只创建一个 Filter：LoginFilter，然后根据不同类型的登录url，来创建不同的 Token
      */
-    private final LocalLoginFilter localLoginFilter;
-    private final EmailLoginFilter emailLoginFilter;
-    private final PhoneLoginFilter phoneLoginFilter;
-    private final LoginFilter loginFilter;
-    private final LoginPolicyFilter loginPolicyFilter;
-    private final DynamicAuthorizationManager dynamicAuthorizationManager;
+    private final TokenUtils tokenUtils;
+    private final ResourceService resourceService;
+    private final LoginPolicyConfig loginPolicyConfig;
+    private final SysUserService userService;
 
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        // 路径配置 （authorizeRequests 方法已废弃，取而代之的是 authorizeHttpRequests）
-        // http.antMatcher()不再可用，并被替换为 http.securityMatcher() 或 httpSecurity.requestMatchers()
-        // SpringSecurityUtils.ignoreUrlArray() 可以只配置注册登录相关页面，其它所有权限放到数据库，
-        // 通过 dynamicAuthorizationManager 动态权限决策管理器，来动态管理
-        // 6.0.1 已废弃
-        // httpSecurity.authorizeHttpRequests()
-        //         .requestMatchers(SpringSecurityUtils.ignoreUrlArray()).permitAll()
-        //         .anyRequest()
-        //         .access(dynamicAuthorizationManager);
-
-        httpSecurity.authorizeHttpRequests(authorizeHttpRequests ->
-                authorizeHttpRequests
-                        .requestMatchers(SpringSecurityUtils.authenticateUrlArray()).authenticated()
-                        .anyRequest().permitAll()
-        );
-
+        String[] authenticateUrlArray = SpringSecurityUtils.authenticateUrlArray();
         httpSecurity
-                .formLogin(formLogin -> formLogin.disable())
-                .addFilterBefore(loginPolicyFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(localLoginFilter, UsernamePasswordAuthenticationFilter.class)
-                //.addFilterBefore(emailLoginFilter, UsernamePasswordAuthenticationFilter.class)
-                //.addFilterBefore(phoneLoginFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(logout -> logout.logoutUrl(SpringSecurityUtils.LOGOUT_URL).logoutSuccessHandler(globalAuthenticationHandler));
+                // 配置请求授权规则
+                .authorizeHttpRequests(authorizeHttpRequests ->
+                        authorizeHttpRequests
+                                .requestMatchers(authenticateUrlArray).authenticated()
+                                .anyRequest().permitAll()
+                )
+                // 禁用默认表单登录
+                .formLogin(AbstractHttpConfigurer::disable)
 
-        // httpSecurity.rememberMe().rememberMeServices(dbRememberMeServices)
-        httpSecurity
-                .csrf(csrf -> csrf.disable())
-                //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                //.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-                //.and()
-                .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler(globalAuthenticationHandler).authenticationEntryPoint(globalAuthenticationHandler));
+                // 添加自定义过滤器
+                .addFilterBefore(new LoginPolicyFilter(loginPolicyConfig,tokenUtils,userService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new LoginFilter(tokenUtils,resourceService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new LocalLoginFilter(tokenUtils), UsernamePasswordAuthenticationFilter.class)
 
-        httpSecurity
+                // 配置退出登录
+                .logout(logout -> logout.logoutUrl(SpringSecurityUtils.LOGOUT_URL).logoutSuccessHandler(globalAuthenticationHandler))
+
+                // 禁用CSRF
+                .csrf(AbstractHttpConfigurer::disable)
+
+                // 配置异常处理
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling.accessDeniedHandler(globalAuthenticationHandler)
+                                .authenticationEntryPoint(globalAuthenticationHandler))
+
+                // 配置会话管理策略为无状态
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
+        // 构建并返回安全过滤器链
         return httpSecurity.build();
     }
 

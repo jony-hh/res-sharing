@@ -6,6 +6,8 @@ import com.jony.api.ResultCode;
 import com.jony.security.vo.UserInfoVo;
 import com.jony.service.SysUserService;
 import com.jony.utils.TokenUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("sys/user")
 @RequiredArgsConstructor
+@Tag(name = "用户相关")
 public class SysUserController {
 
     private final SysUserService sysUserService;
@@ -30,12 +33,15 @@ public class SysUserController {
 
 
     @GetMapping("loginUser")
+    @Operation(summary = "获取登录用户信息")
+    @PreAuthorize("hasAuthority('sys:user:page')")
     public CommonResult<UserInfoVo> getLoginUser(HttpServletRequest request) {
         UserInfoVo userInfoVo = tokenUtils.getUserInfoVo(request);
         return CommonResult.success(userInfoVo);
     }
 
     @PostMapping("logout")
+    @Operation(summary = "退出登录")
     public CommonResult<String> logout(HttpServletRequest request) {
         tokenUtils.logout(request);
         return CommonResult.success(null, ResultCode.LOGOUT_SUCCESS.getMessage());

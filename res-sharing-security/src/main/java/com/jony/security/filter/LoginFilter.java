@@ -52,9 +52,9 @@ import java.util.List;
  * OncePerRequestFilter：保证一次外部请求，只执行一次过滤方法，对于服务器内部之间的forward等请求，不会再次执行过滤方法
  */
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class LoginFilter extends OncePerRequestFilter {
+
     private final TokenUtils tokenUtils;
     private final ResourceService resourceService;
 

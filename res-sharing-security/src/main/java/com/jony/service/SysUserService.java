@@ -1,6 +1,9 @@
 package com.jony.service;
 
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.jony.entity.SysAuth;
+import com.jony.entity.SysUser;
 import com.jony.security.vo.UserInfoVo;
 
 /**
@@ -9,7 +12,7 @@ import com.jony.security.vo.UserInfoVo;
  * @author jony
  * @since 2024-02-07 14:32:03
  */
-public interface SysUserService {
+public interface SysUserService extends IService<SysUser> {
     /**
      * 账号查询
      *

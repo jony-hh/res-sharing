@@ -1,11 +1,13 @@
 package com.jony.service.impl;
 
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jony.entity.SysAuth;
 import com.jony.entity.SysMenu;
 import com.jony.entity.SysRole;
 import com.jony.entity.SysUser;
 import com.jony.mapper.SysAuthMapper;
+import com.jony.mapper.SysMenuMapper;
 import com.jony.mapper.SysRoleMapper;
 import com.jony.mapper.SysUserMapper;
 import com.jony.security.vo.UserInfoVo;
@@ -30,7 +32,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
 @RequiredArgsConstructor
-public class SysUserServiceImpl implements SysUserService {
+public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
     private final SysAuthMapper authMapper;
     private final SysUserMapper userMapper;
     private final SysRoleMapper roleMapper;

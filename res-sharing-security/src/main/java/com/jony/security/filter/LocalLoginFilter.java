@@ -31,7 +31,6 @@ import java.io.IOException;
  * 合并的方式：所有类型方式的登录，登录过滤器逻辑统一在 {@link LoginFilter}
  */
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class LocalLoginFilter extends OncePerRequestFilter {
 

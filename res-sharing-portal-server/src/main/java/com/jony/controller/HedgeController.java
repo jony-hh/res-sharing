@@ -7,9 +7,12 @@ import com.jony.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.authentication.UserServiceBeanDefinitionParser;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 首页 欢迎信息
@@ -25,21 +28,19 @@ public class HedgeController {
     private final PasswordEncoder passwordEncoder;
     private final SysUserService sysUserService;
 
-
     @GetMapping("/index")
     @Operation(summary = "启动测试")
-    // @PreAuthorize("hasAuthority('sys:user:index')")
     public CommonResult<?> index() {
         return CommonResult.success(ResultCode.START_SUCCESS);
     }
 
+    // 【123456】：$2a$10$DLLih1Hg3qNZXqdy5JvN4epUX7fJHt2F7812uyhC/Mp8Npj.w246m
     @PostMapping("/modify")
     @Operation(summary = "修改系统用户密码")
-    @PreAuthorize("hasAuthority('sys:user:update')")
     public CommonResult<?> modify(String pwd, Integer id){
         String encodePwd = passwordEncoder.encode(pwd);
         SysUser user = sysUserService.getById(id);
-        user.setPassword(encodePwd);
+        user.setPassword(pwd);
         sysUserService.updateById(user);
         return CommonResult.success(ResultCode.SUCCESS);
     }
