@@ -1,5 +1,6 @@
 package com.jony.controller;
 
+import com.github.yitter.idgen.YitIdHelper;
 import com.jony.api.CommonResult;
 import com.jony.api.ResultCode;
 import com.jony.entity.SysUser;
@@ -43,5 +44,12 @@ public class HedgeController {
         user.setPassword(pwd);
         sysUserService.updateById(user);
         return CommonResult.success(ResultCode.SUCCESS);
+    }
+
+    @GetMapping("/generateId")
+    @Operation(summary = "生成id测试")
+    public CommonResult<?> generateId() {
+        long newId = YitIdHelper.nextId();
+        return CommonResult.success(newId);
     }
 }

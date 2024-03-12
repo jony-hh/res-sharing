@@ -15,11 +15,11 @@
             <artifactId>res-sharing-common</artifactId>
             <version>${revision}</version>
         </dependency>
-        <dependency>
-            <groupId>com.jony</groupId>
-            <artifactId>res-sharing-search</artifactId>
-            <version>${revision}</version>
-        </dependency>
+        <!-- <dependency> -->
+        <!--     <groupId>com.jony</groupId> -->
+        <!--     <artifactId>res-sharing-search</artifactId> -->
+        <!--     <version>${revision}</version> -->
+        <!-- </dependency> -->
         <dependency>
             <groupId>com.jony</groupId>
             <artifactId>res-sharing-security</artifactId>
