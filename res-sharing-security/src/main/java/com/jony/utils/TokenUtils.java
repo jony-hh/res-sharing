@@ -2,9 +2,9 @@ package com.jony.utils;
 
 
 import cn.hutool.core.util.StrUtil;
-import com.jony.security.vo.UserInfoVo;
 import com.jony.enums.RedisKeyEnum;
 import com.jony.security.dto.AuthTokenCacheDto;
+import com.jony.security.vo.UserInfoVo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -254,7 +254,7 @@ public class TokenUtils {
             return;
         }
         Long userId = getUserInfoVo(request).getId();
-        logout(token,rememberMeToken,userId);
+        logout(token, rememberMeToken, userId);
     }
 
     public void logout(String authToken, String rememberMeToken, Long userId) {

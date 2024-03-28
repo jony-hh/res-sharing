@@ -157,19 +157,19 @@ public class ApiResponse<T> implements Serializable {
          * 常用响应码
          */
         SUCCESS(200),
-        //未授权 （登录认证失败）
+        // 未授权 （登录认证失败）
         UN_AUTH(401),
-        //警告
+        // 警告
         WARN(402),
-        //拒绝请求，禁止访问 （无权限）
+        // 拒绝请求，禁止访问 （无权限）
         FORBIDDEN(403),
-        //请求超时
+        // 请求超时
         TIME_OUT(408),
-        //请求实体过大
+        // 请求实体过大
         BODY_LARGE(413),
-        //服务器内部错误
+        // 服务器内部错误
         ERROR(500),
-        //服务不可用(超载或停机维护)
+        // 服务不可用(超载或停机维护)
         SERVICE_UNAVAILABLE(503),
         ;
 

@@ -17,7 +17,7 @@ knife4j:
   setting:
     custom-code: 500
     enable-footer-custom: false
-    
+
 spring:
   # 环境 dev|test|prod
   profiles:
@@ -95,6 +95,8 @@ shuishu:
   # 登录策略（默认ONE：com.shuishu.demo.security.common.config.security.LoginPolicyConfig.getLoginPolicy）
   # ONE: 达到最大客户端登录人数，将最早登录的客户端给踢掉
   # TWO: 达到最大客户端登录人数，不允许登录
+  encrypt:
+    salt: jony
   login-policy: TWO
   token:
     secret: spring_security_examples

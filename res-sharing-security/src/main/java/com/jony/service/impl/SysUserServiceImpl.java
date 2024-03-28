@@ -3,11 +3,9 @@ package com.jony.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jony.entity.SysAuth;
-import com.jony.entity.SysMenu;
 import com.jony.entity.SysRole;
 import com.jony.entity.SysUser;
 import com.jony.mapper.SysAuthMapper;
-import com.jony.mapper.SysMenuMapper;
 import com.jony.mapper.SysRoleMapper;
 import com.jony.mapper.SysUserMapper;
 import com.jony.security.vo.UserInfoVo;

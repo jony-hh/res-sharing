@@ -12,10 +12,10 @@ import com.fhs.core.trans.constant.TransType;
 import com.fhs.core.trans.util.ReflectUtils;
 import com.fhs.core.trans.vo.TransPojo;
 import com.fhs.trans.service.impl.DictionaryTransService;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.SneakyThrows;
 import com.jony.excel.ExcelDataListener;
 import com.jony.excel.ExcelFinishCallBack;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -183,14 +183,14 @@ public class ExcelUtils {
      */
     @SneakyThrows
     public static <T extends TransPojo> void parseDict(List<T> dataList) {
-        //没有数据就不需要初始化
+        // 没有数据就不需要初始化
         if (CollectionUtil.isEmpty(dataList)) {
             return;
         }
         Class<? extends TransPojo> clazz = dataList.get(0).getClass();
-        //拿到所有需要反向翻译的字段
+        // 拿到所有需要反向翻译的字段
         List<Field> fields = ReflectUtils.getAnnotationField(clazz, Trans.class);
-        //过滤出字典翻译
+        // 过滤出字典翻译
         fields = fields.stream().filter(field -> TransType.DICTIONARY.equals(field.getAnnotation(Trans.class).type())).collect(Collectors.toList());
         DictionaryTransService dictionaryTransService = SpringUtil.getBean(DictionaryTransService.class);
         for (T data : dataList) {

@@ -1,10 +1,10 @@
 package com.jony.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
 import com.jony.entity.SysUserToken;
 import com.jony.mapper.SysUserTokenMapper;
 import com.jony.service.SysUserTokenService;
+import org.springframework.stereotype.Service;
 
 
 /**

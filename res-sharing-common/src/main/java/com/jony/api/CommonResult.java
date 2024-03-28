@@ -29,6 +29,7 @@ public class CommonResult<T> {
     private T data;
 
     // region 成功返回结果
+
     /**
      * 成功返回结果
      *
@@ -41,8 +42,8 @@ public class CommonResult<T> {
     /**
      * 成功返回结果
      *
-     * @param data 获取的数据
-     * @param  message 提示信息
+     * @param data    获取的数据
+     * @param message 提示信息
      */
     public static <T> CommonResult<T> success(T data, String message) {
         return new CommonResult<T>(ResultCode.SUCCESS.getCode(), message, data);
@@ -55,8 +56,10 @@ public class CommonResult<T> {
     // endregion
 
     // region 异常返回结果
+
     /**
      * 异常返回结果
+     *
      * @param errorCode 提示信息
      */
     public static <T> CommonResult<T> error(ErrorCode errorCode) {
@@ -65,16 +68,19 @@ public class CommonResult<T> {
 
     /**
      * 异常返回结果
+     *
      * @param code,message 提示信息
      */
-    public static <T> CommonResult<T> error(int code,String message) {
-        return new CommonResult<T>(code,message, null);
+    public static <T> CommonResult<T> error(int code, String message) {
+        return new CommonResult<T>(code, message, null);
     }
     // endregion
 
     // region 失败返回结果
+
     /**
      * 失败返回结果
+     *
      * @param errorCode 错误码
      */
     public static <T> CommonResult<T> failed(IErrorCode errorCode) {
@@ -83,15 +89,17 @@ public class CommonResult<T> {
 
     /**
      * 失败返回结果
+     *
      * @param errorCode 错误码
-     * @param message 错误信息
+     * @param message   错误信息
      */
-    public static <T> CommonResult<T> failed(IErrorCode errorCode,String message) {
+    public static <T> CommonResult<T> failed(IErrorCode errorCode, String message) {
         return new CommonResult<T>(errorCode.getCode(), message, null);
     }
 
     /**
      * 失败返回结果
+     *
      * @param message 提示信息
      */
     public static <T> CommonResult<T> failed(String message) {
@@ -105,9 +113,10 @@ public class CommonResult<T> {
         return failed(ResultCode.OPERATION_FAILED);
     }
 
-    //endregion
+    // endregion
 
     // region 数验证失败返回结果
+
     /**
      * 参数验证失败返回结果
      */
@@ -117,6 +126,7 @@ public class CommonResult<T> {
 
     /**
      * 参数验证失败返回结果
+     *
      * @param message 提示信息
      */
     public static <T> CommonResult<T> validateFailed(String message) {
@@ -126,6 +136,7 @@ public class CommonResult<T> {
     // endregion
 
     // region auth相关
+
     /**
      * 未登录返回结果
      */

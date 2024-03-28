@@ -20,7 +20,7 @@ public class JsonUtils {
     static {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
-    
+
     public static String toJsonString(Object object) {
         try {
             return objectMapper.writeValueAsString(object);

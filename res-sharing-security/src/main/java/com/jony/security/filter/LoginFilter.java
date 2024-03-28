@@ -2,12 +2,12 @@ package com.jony.security.filter;
 
 
 import com.jony.exception.ApiResponse;
-import com.jony.security.utils.SpringSecurityUtils;
 import com.jony.security.cache.ResourceService;
 import com.jony.security.dto.PermissionCacheDto;
 import com.jony.security.token.EmailAuthenticationToken;
 import com.jony.security.token.LocalAuthenticationToken;
 import com.jony.security.token.PhoneAuthenticationToken;
+import com.jony.security.utils.SpringSecurityUtils;
 import com.jony.security.vo.UserInfoVo;
 import com.jony.utils.ResponseUtils;
 import com.jony.utils.TokenUtils;
@@ -22,7 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -104,7 +103,7 @@ public class LoginFilter extends OncePerRequestFilter {
         }
         // 用户信息放到上下文
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            //不同的登录类型 可以分开处理。可以只创建一个Filter：LoginFilter，根据不同的登录url，来创建不同的 Token
+            // 不同的登录类型 可以分开处理。可以只创建一个Filter：LoginFilter，根据不同的登录url，来创建不同的 Token
             if (SpringSecurityUtils.LOGIN_URL_LOCAL.contains(requestUri)) {
                 LocalAuthenticationToken localAuthenticationToken = new LocalAuthenticationToken(userInfoVo.getUserAuthIdentifier(), null, userInfoVo.getAuthorities());
                 localAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

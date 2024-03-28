@@ -2,6 +2,7 @@
 server:
   tomcat:
     uri-encoding: UTF-8
+    max-http-form-post-size: 20971520
     threads:
       max: 1000
       min-spare: 30
@@ -17,7 +18,7 @@ knife4j:
   setting:
     custom-code: 500
     enable-footer-custom: false
-    
+
 spring:
   # 环境 dev|test|prod
   profiles:
@@ -35,14 +36,19 @@ storage:
   enabled: true
   config:
     # 存储类型：local、aliyun、tencent、qiniu、huawei、minio
-    type: local
-    domain: http://localhost:8080
+    type: qiniu
+    # domain: http://localhost:8080
   local:
     path: D://upload
+  qiniu:
+    accessKey: ObGKPQLd7sHR-5lb_eFYsZvWGKuS4fPc1IQ8lNRY
+    secretKey: iK5YjzhjqQJ5N9dVj4cXcU8XX6SlVFzf-fbuabxG
+    bucket: jony-gallery
+    domain: http://qn.jonyh.eu.org/
 
 jony:
   xss:
-    enabled: true
+    enabled: false
     exclude-urls:
       - /jony-generator/**
   security:
@@ -90,6 +96,8 @@ shuishu:
   # 登录策略（默认ONE：com.shuishu.demo.security.common.config.security.LoginPolicyConfig.getLoginPolicy）
   # ONE: 达到最大客户端登录人数，将最早登录的客户端给踢掉
   # TWO: 达到最大客户端登录人数，不允许登录
+  encrypt:
+    salt: jony
   login-policy: TWO
   token:
     secret: spring_security_examples

@@ -1,4 +1,5 @@
 auth:
   ignore_urls:
     - /sys/auth/**
+    - /sys/register/**
     - /hedge/index

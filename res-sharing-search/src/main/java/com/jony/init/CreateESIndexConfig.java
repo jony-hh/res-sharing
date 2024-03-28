@@ -1,7 +1,7 @@
 package com.jony.init;
 
-import com.jony.config.ElasticSearchConfigProperties;
 import com.jony.api.IndexApi;
+import com.jony.config.ElasticSearchConfigProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;

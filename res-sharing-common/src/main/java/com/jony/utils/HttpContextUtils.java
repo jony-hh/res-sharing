@@ -57,7 +57,7 @@ public class HttpContextUtils {
 
     public static String getDomain() {
         HttpServletRequest request = getHttpServletRequest();
-        
+
         return getDomain(request);
     }
 

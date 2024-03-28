@@ -12,9 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -59,7 +57,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     ApiResponse<String> handleAccessDeniedException(AccessDeniedException e) {
         log.warn("无权限访问：{}", "此用户没有这个权限哦");
-        return ApiResponse.of(ApiResponse.Type.FORBIDDEN.value(),e.getMessage());
+        return ApiResponse.of(ApiResponse.Type.FORBIDDEN.value(), e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

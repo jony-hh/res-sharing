@@ -18,6 +18,7 @@ public class RedissonUtil {
 
     /**
      * 加锁
+     *
      * @param lockKey 锁的键
      * @return RLock
      */
@@ -29,6 +30,7 @@ public class RedissonUtil {
 
     /**
      * 带超时的锁
+     *
      * @param lockKey 锁的键
      * @param timeout 超时时间 单位：秒
      */
@@ -40,11 +42,12 @@ public class RedissonUtil {
 
     /**
      * 带超时的锁
+     *
      * @param lockKey 锁的键
-     * @param unit 时间单位
+     * @param unit    时间单位
      * @param timeout 超时时间
      */
-    public RLock lock(String lockKey, TimeUnit unit ,long timeout) {
+    public RLock lock(String lockKey, TimeUnit unit, long timeout) {
         RLock lock = redissonClient.getLock(lockKey);
         lock.lock(timeout, unit);
         return lock;
@@ -52,12 +55,13 @@ public class RedissonUtil {
 
     /**
      * 尝试获取锁
-     * @param lockKey 锁的键
+     *
+     * @param lockKey  锁的键
      * @param waitTime 最多等待时间
-     * @param unit TimeUnit时间单位
+     * @param unit     TimeUnit时间单位
      * @return boolean
      */
-    public  boolean tryLock(String lockKey,long waitTime, TimeUnit unit) {
+    public boolean tryLock(String lockKey, long waitTime, TimeUnit unit) {
         RLock lock = redissonClient.getLock(lockKey);
         try {
             return lock.tryLock(waitTime, unit);
@@ -68,12 +72,13 @@ public class RedissonUtil {
 
     /**
      * 尝试获取锁
-     * @param lockKey 锁的键
-     * @param waitTime 最多等待时间
+     *
+     * @param lockKey   锁的键
+     * @param waitTime  最多等待时间
      * @param leaseTime 上锁后自动释放锁时间
      * @return boolean
      */
-    public  boolean tryLock(String lockKey, long waitTime, long leaseTime) {
+    public boolean tryLock(String lockKey, long waitTime, long leaseTime) {
         RLock lock = redissonClient.getLock(lockKey);
         try {
             return lock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS);
@@ -84,9 +89,10 @@ public class RedissonUtil {
 
     /**
      * 尝试获取锁
-     * @param lockKey 锁的键
-     * @param unit 时间单位
-     * @param waitTime 最多等待时间
+     *
+     * @param lockKey   锁的键
+     * @param unit      时间单位
+     * @param waitTime  最多等待时间
      * @param leaseTime 上锁后自动释放锁时间
      * @return boolean
      */
@@ -101,6 +107,7 @@ public class RedissonUtil {
 
     /**
      * 释放锁
+     *
      * @param lockKey 锁的键
      */
     public void unlock(String lockKey) {
@@ -110,12 +117,13 @@ public class RedissonUtil {
 
     /**
      * 若没用锁情况下，就不调用释放锁的代码，若有锁情况下才调用释放锁
+     *
      * @param lockKey 锁的键
      */
     public void unlockIgnore(String lockKey) {
         RLock lock = redissonClient.getLock(lockKey);
-        if ( !lock.isLocked() ) {
-           return ;
+        if (!lock.isLocked()) {
+            return;
         }
         lock.unlock();
     }
@@ -123,6 +131,7 @@ public class RedissonUtil {
 
     /**
      * 释放锁
+     *
      * @param lock 锁
      */
     public void unlock(RLock lock) {

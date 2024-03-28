@@ -6,7 +6,6 @@ import com.jony.security.config.PermitResource;
 import com.jony.security.token.EmailAuthenticationToken;
 import com.jony.security.token.LocalAuthenticationToken;
 import com.jony.security.token.PhoneAuthenticationToken;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,7 +39,7 @@ public class SpringSecurityUtils {
         if (StringUtils.hasText(uri)) {
             if (uri.contains(LOGIN_URL_LOCAL)) {
                 return UserEnum.AuthType.LOCAL.getType();
-            }else if (uri.contains(LOGIN_URL_EMAIL)){
+            } else if (uri.contains(LOGIN_URL_EMAIL)) {
                 return UserEnum.AuthType.EMAIL.getType();
             } else if (uri.contains(LOGIN_URL_PHONE)) {
                 return UserEnum.AuthType.PHONE.getType();
@@ -50,13 +49,13 @@ public class SpringSecurityUtils {
     }
 
     public static String[] ignoreUrlArray() {
-        //yml配置文件有访问前缀context-path  SpringSecurity 这里就不能加前缀
+        // yml配置文件有访问前缀context-path  SpringSecurity 这里就不能加前缀
         List<String> permitList = PermitResource.getPermitList();
         return permitList.toArray(new String[0]);
     }
 
     public static String[] authenticateUrlArray() {
-        //yml配置文件有访问前缀context-path  SpringSecurity 这里就不能加前缀
+        // yml配置文件有访问前缀context-path  SpringSecurity 这里就不能加前缀
         List<String> permitList = PermitResource.getNotPermitList();
         return permitList.toArray(new String[0]);
     }

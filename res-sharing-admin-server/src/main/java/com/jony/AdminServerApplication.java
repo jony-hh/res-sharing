@@ -8,13 +8,13 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication
 public class AdminServerApplication extends SpringBootServletInitializer {
 
-	// http://localhost:8866/admin/api/doc.html
-	public static void main(String[] args) {
-		SpringApplication.run(AdminServerApplication.class, args);
-	}
+    // http://localhost:8866/admin/api/doc.html
+    public static void main(String[] args) {
+        SpringApplication.run(AdminServerApplication.class, args);
+    }
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(AdminServerApplication.class);
-	}
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(AdminServerApplication.class);
+    }
 }

@@ -15,16 +15,27 @@
             <artifactId>res-sharing-common</artifactId>
             <version>${revision}</version>
         </dependency>
+        <dependency>
+            <groupId>com.jony</groupId>
+            <artifactId>res-sharing-mapper</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jony</groupId>
+            <artifactId>res-sharing-sys-mapper</artifactId>
+            <version>${revision}</version>
+        </dependency>
         <!-- <dependency> -->
         <!--     <groupId>com.jony</groupId> -->
         <!--     <artifactId>res-sharing-search</artifactId> -->
         <!--     <version>${revision}</version> -->
         <!-- </dependency> -->
-        <dependency>
-            <groupId>com.jony</groupId>
-            <artifactId>res-sharing-security</artifactId>
-            <version>${revision}</version>
-        </dependency>
+        <!-- TODO 依赖后无法上传文件 -->
+        <!-- <dependency> -->
+        <!--     <groupId>com.jony</groupId> -->
+        <!--     <artifactId>res-sharing-security</artifactId> -->
+        <!--     <version>${revision}</version> -->
+        <!-- </dependency> -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

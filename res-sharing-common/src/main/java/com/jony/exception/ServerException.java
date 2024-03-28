@@ -16,7 +16,7 @@ public class ServerException extends RuntimeException {
     private int code;
     private String msg;
 
-    public ServerException(int code,String msg) {
+    public ServerException(int code, String msg) {
         super(msg);
         this.code = code;
         this.msg = msg;

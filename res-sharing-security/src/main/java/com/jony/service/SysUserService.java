@@ -2,7 +2,6 @@ package com.jony.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.jony.entity.SysAuth;
 import com.jony.entity.SysUser;
 import com.jony.security.vo.UserInfoVo;
 
@@ -17,7 +16,7 @@ public interface SysUserService extends IService<SysUser> {
      * 账号查询
      *
      * @param userAuthIdentifier 账号
-     * @param authType 账号类型
+     * @param authType           账号类型
      * @return 用户信息
      */
     UserInfoVo findByUserAuthIdentifier(String userAuthIdentifier, String authType);

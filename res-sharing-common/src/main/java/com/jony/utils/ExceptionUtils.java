@@ -14,8 +14,9 @@ public class ExceptionUtils {
 
     /**
      * 获取异常信息
-     * @param e  异常
-     * @return    返回异常信息
+     *
+     * @param e 异常
+     * @return 返回异常信息
      */
     public static String getExceptionMessage(Exception e) {
         StringWriter sw = new StringWriter();

@@ -9,7 +9,7 @@ import lombok.Getter;
  * @description ：
  */
 @Getter
-public class BusinessException extends RuntimeException{
+public class BusinessException extends RuntimeException {
 
     private Object data;
 

@@ -3,7 +3,9 @@ package com.jony.config;
 
 import com.jony.security.cache.ResourceService;
 import com.jony.security.config.LoginPolicyConfig;
-import com.jony.security.filter.*;
+import com.jony.security.filter.LocalLoginFilter;
+import com.jony.security.filter.LoginFilter;
+import com.jony.security.filter.LoginPolicyFilter;
 import com.jony.security.handler.GlobalAuthenticationHandler;
 import com.jony.security.manager.DynamicAuthorizationManager;
 import com.jony.security.utils.SpringSecurityUtils;
@@ -15,7 +17,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -59,8 +60,8 @@ public class SpringSecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
 
                 // 添加自定义过滤器到UsernamePasswordAuthenticationFilter之前
-                .addFilterBefore(new LoginPolicyFilter(loginPolicyConfig,tokenUtils,userService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new LoginFilter(tokenUtils,resourceService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new LoginPolicyFilter(loginPolicyConfig, tokenUtils, userService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new LoginFilter(tokenUtils, resourceService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new LocalLoginFilter(tokenUtils), UsernamePasswordAuthenticationFilter.class)
 
                 // 配置退出登录

@@ -1,9 +1,7 @@
 package com.jony.security.cache;
 
 
-import com.jony.entity.SysMenu;
 import com.jony.enums.RedisKeyEnum;
-import com.jony.mapper.SysMenuMapper;
 import com.jony.security.dto.PermissionCacheDto;
 import com.jony.service.SysMenuService;
 import com.jony.utils.RedisUtils;

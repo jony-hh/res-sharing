@@ -19,7 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,21 +33,22 @@ import org.springframework.stereotype.Component;
 public class AuthenticationConfig {
 
     private final SysUserService userService;
+    private final PlainTextPasswordEncoder passwordEncoder;
 
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    // @Bean
+    // public BCryptPasswordEncoder passwordEncoder() {
+    //     return new BCryptPasswordEncoder();
+    // }
 
     @Bean
     public AuthenticationManager authenticationManager() {
         log.info("【AuthenticationManagerConfig】注册bean：authenticationManager");
-        //AuthenticationManagerBuilder authenticationManagerBuilder = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
-        //AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
-        //authenticationManager.authenticationProvider(localDaoAuthenticationProvider());
-        //authenticationManager.authenticationProvider(emailAuthenticationProvider());
-        //authenticationManager.authenticationProvider(phoneAuthenticationProvider());
+        // AuthenticationManagerBuilder authenticationManagerBuilder = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
+        // AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
+        // authenticationManager.authenticationProvider(localDaoAuthenticationProvider());
+        // authenticationManager.authenticationProvider(emailAuthenticationProvider());
+        // authenticationManager.authenticationProvider(phoneAuthenticationProvider());
         return new ProviderManager(localDaoAuthenticationProvider(), emailAuthenticationProvider(), phoneAuthenticationProvider());
     }
 
@@ -68,7 +68,8 @@ public class AuthenticationConfig {
                 log.info("【LocalDaoAuthenticationProvider 认证】执行authenticate()方法，查询用户：" + userInfoVO);
 
                 // 校验密码正确性
-                if (!passwordEncoder().matches(userAuthCredential, userInfoVO.getPassword())) {
+                // if (!passwordEncoder().matches(userAuthCredential, userInfoVO.getPassword())) {
+                if (!passwordEncoder.matches(userAuthCredential, userInfoVO.getPassword())) {
                     log.info("【LocalDaoAuthenticationProvider 认证】执行authenticate()方法，账号：{} 密码错误", userAuthIdentifier);
                     throw new BadCredentialsException("用户名或密码不正确");
                 }

@@ -2,11 +2,10 @@ package com.jony.controller;
 
 
 import com.jony.api.CommonResult;
+import com.jony.enums.UserEnum;
+import com.jony.security.dto.UserLoginDto;
 import com.jony.security.utils.SpringSecurityUtils;
 import com.jony.security.vo.UserInfoVo;
-import com.jony.security.dto.UserLoginDto;
-import com.jony.enums.UserEnum;
-import com.jony.utils.TokenUtils;
 import com.jony.service.SysAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,8 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class SysAuthController {
 
     private final SysAuthService sysAuthService;
-    private final TokenUtils tokenUtils;
-
 
     @PostMapping("local")
     @Operation(summary = "站内账户登录")

@@ -9,7 +9,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 首页 欢迎信息
@@ -36,7 +39,7 @@ public class HedgeController {
     @PostMapping("/modify")
     @Operation(summary = "修改系统用户密码")
     @PreAuthorize("hasAuthority('sys:user:update')")
-    public CommonResult<?> modify(String pwd, Integer id){
+    public CommonResult<?> modify(String pwd, Integer id) {
         String encodePwd = passwordEncoder.encode(pwd);
         SysUser user = sysUserService.getById(id);
         user.setPassword(encodePwd);

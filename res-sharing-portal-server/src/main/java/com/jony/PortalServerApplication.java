@@ -8,13 +8,13 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication
 public class PortalServerApplication extends SpringBootServletInitializer {
 
-	// http://localhost:8877/portal/api/doc.html
-	public static void main(String[] args) {
-		SpringApplication.run(PortalServerApplication.class, args);
-	}
+    // http://localhost:8877/portal/api/doc.html
+    public static void main(String[] args) {
+        SpringApplication.run(PortalServerApplication.class, args);
+    }
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(PortalServerApplication.class);
-	}
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(PortalServerApplication.class);
+    }
 }
