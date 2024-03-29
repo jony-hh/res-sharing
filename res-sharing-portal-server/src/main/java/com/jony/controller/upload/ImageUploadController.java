@@ -4,6 +4,7 @@ import com.jony.exception.ErrorCode;
 import com.jony.service.impl.FileService;
 import com.jony.utils.PathUtils;
 import com.jony.utils.Result;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @Slf4j
 @RequestMapping("/upload")
+@Tag(name = "图片上传")
 public class ImageUploadController {
 
     @Resource

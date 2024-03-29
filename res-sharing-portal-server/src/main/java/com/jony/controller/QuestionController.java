@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/qa/question")
 @AllArgsConstructor
-@Tag(name = "紧急避险")
+@Tag(name = "qa问答")
 public class QuestionController {
 
     @Resource
