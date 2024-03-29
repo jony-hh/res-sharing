@@ -1,4 +1,4 @@
-package com.jony.controller;
+package com.jony.controller.res;
 
 
 import com.jony.api.CommonResult;

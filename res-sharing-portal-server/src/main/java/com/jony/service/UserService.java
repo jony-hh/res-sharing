@@ -18,7 +18,6 @@ public interface UserService extends IService<SysUser> {
      */
     SysUser getLoginUser(HttpServletRequest request);
 
-
     /**
      * feat: 获取当前用户
      *
@@ -31,6 +30,11 @@ public interface UserService extends IService<SysUser> {
      * login
      */
     boolean authenticate(UserLoginDTO userLoginDTO, HttpServletResponse response);
+
+    /**
+     * logout
+     */
+    boolean logout(HttpServletRequest request);
 
 
 }

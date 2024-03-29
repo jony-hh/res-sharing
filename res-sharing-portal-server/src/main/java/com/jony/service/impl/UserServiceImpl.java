@@ -86,16 +86,16 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
     @Override
     public List<String> getUserRole(Long id) {
         // 构建查询条件
-        QueryWrapper<SysUserRole> userRoleQueryWrapper = new QueryWrapper<>();
-        userRoleQueryWrapper.eq("user_id", id);
+        LambdaQueryWrapper<SysUserRole> userRoleQueryWrapper = new LambdaQueryWrapper<>();
+        userRoleQueryWrapper.eq(SysUserRole::getUserId, id);
         List<SysUserRole> userRoles = sysUserRoleMapper.selectList(userRoleQueryWrapper);
 
         // 提取角色ID
         List<Long> roleIds = userRoles.stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
 
         // 查询角色信息
-        QueryWrapper<SysRole> roleQueryWrapper = new QueryWrapper<>();
-        roleQueryWrapper.in("role_id", roleIds);
+        LambdaQueryWrapper<SysRole> roleQueryWrapper = new LambdaQueryWrapper<>();
+        roleQueryWrapper.in(SysRole::getId, roleIds);
         List<SysRole> sysRoles = sysRoleMapper.selectList(roleQueryWrapper);
         List<String> roleCodes = sysRoles.stream().map(SysRole::getRoleCode).collect(Collectors.toList());
         return roleCodes;
@@ -104,10 +104,10 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
     @Override
     public boolean authenticate(UserLoginDTO userLoginDTO, HttpServletResponse response) {
 
-        // 2. 加密
+        // 1. 加密
         String password = userLoginDTO.getPassword();
         String encryptPassword = DigestUtils.md5DigestAsHex((salt + password).getBytes());
-        // 站内账号查sys_user表
+        // 2、站内账号查sys_user表
         LambdaQueryWrapper<SysUser> sysUserWrapper = new LambdaQueryWrapper<>();
         sysUserWrapper.eq(SysUser::getUsername, userLoginDTO.getUsername());
         sysUserWrapper.eq(SysUser::getPassword, encryptPassword);
@@ -115,7 +115,7 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
         if (sysUser == null) {
             throw new ServerException(ErrorCode.OPERATION_ERROR);
         }
-        // 验证成功进行缓存
+        // 3、验证成功对token进行缓存
         String authToken = PasswordUtils.encrypt(ymlSecret, UUID.randomUUID().toString().replace("-", ""));
         if (StringUtils.hasText(authToken)) {
             redisUtils.strSet(RedisKeyEnum.GROUP_AUTH_TOKEN.getKey() + authToken, sysUser, ymlExpireTime);
@@ -127,5 +127,15 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean logout(HttpServletRequest request) {
+        String headerAuthToken = request.getHeader(ymlAuthToken);
+        if (headerAuthToken != null) {
+            redisUtils.del(RedisKeyEnum.GROUP_AUTH_TOKEN.getKey() + headerAuthToken);
+            return true;
+        }
+        return false;
     }
 }

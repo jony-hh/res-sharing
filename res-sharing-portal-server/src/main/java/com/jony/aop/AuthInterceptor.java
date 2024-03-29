@@ -52,18 +52,20 @@ public class AuthInterceptor {
             throw new ServerException(ErrorCode.NOT_LOGIN_ERROR);
         }
 
-        // 必须有该权限才通过
+        // 必须有该【角色】才通过
         if (StringUtils.isNotBlank(mustRole)) {
             UserRoleEnum mustUserRoleEnum = UserRoleEnum.getEnumByValue(mustRole);
+            // 注解参数不对，直接拒绝
             if (mustUserRoleEnum == null) {
                 throw new ServerException(ErrorCode.NO_AUTH_ERROR);
             }
+            // 获取用户角色
             List<String> userRoles = userService.getUserRole(loginUser.getId());
             // 如果被封号，直接拒绝
-            if (UserRoleEnum.BAN.equals(mustUserRoleEnum)) {
+            if (userRoles.contains(UserRoleEnum.BAN.getValue())) {
                 throw new ServerException(ErrorCode.NO_AUTH_ERROR);
             }
-            // 必须有管理员权限
+            // 如果需要管理员权限
             if (UserRoleEnum.ADMIN.equals(mustUserRoleEnum)) {
                 if (!userRoles.contains(mustRole)) {
                     throw new ServerException(ErrorCode.NO_AUTH_ERROR);

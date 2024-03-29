@@ -1,4 +1,4 @@
-package com.jony.controller;
+package com.jony.controller.res;
 
 
 import com.github.yitter.idgen.YitIdHelper;
@@ -61,7 +61,6 @@ public class ResDocumentController {
     }
 
     @GetMapping("/pagingQuery")
-    @AuthCheck(mustRole = "user")
     @Operation(summary = "分页查询文档数据")
     public CommonResult<?> pagingQuery(@RequestParam("page_size") Integer pageSize, @RequestParam("page_num") Integer pageNum) {
         List<ResDocument> documentList = resDocumentService.pagingQuery(pageSize, pageNum);
