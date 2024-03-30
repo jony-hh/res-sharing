@@ -58,19 +58,4 @@ public class UserController {
 
     // endregion
 
-
-    // region 【用户点赞、收藏、浏览记录、动态】
-
-    @PostMapping("thumb")
-    @Operation(summary = "用户点赞操作")
-    public CommonResult<?> thumb(HttpServletRequest request) {
-        boolean result = userService.logout(request);
-        if (result) {
-            return CommonResult.success(ResultCode.SUCCESS);
-        }
-        return CommonResult.failed("退出异常");
-    }
-
-    // endregion
-
 }

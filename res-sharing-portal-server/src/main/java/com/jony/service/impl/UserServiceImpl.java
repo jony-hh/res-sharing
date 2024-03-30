@@ -1,12 +1,13 @@
 package com.jony.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jony.dto.UserLoginDTO;
+import com.jony.dto.UserThumbDTO;
 import com.jony.entity.SysRole;
 import com.jony.entity.SysUser;
 import com.jony.entity.SysUserRole;
+import com.jony.enums.LikedStatusEum;
 import com.jony.enums.RedisKeyEnum;
 import com.jony.exception.ErrorCode;
 import com.jony.exception.ServerException;
@@ -15,8 +16,8 @@ import com.jony.mapper.SysUserMapper;
 import com.jony.mapper.SysUserRoleMapper;
 import com.jony.service.UserService;
 import com.jony.utils.PasswordUtils;
+import com.jony.utils.RedisThumbUtil;
 import com.jony.utils.RedisUtils;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -33,16 +34,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements UserService {
 
-    @Resource
-    SysUserMapper sysUserMapper;
-
-    @Resource
-    SysRoleMapper sysRoleMapper;
-
-    @Resource
-    SysUserRoleMapper sysUserRoleMapper;
-
+    private final SysUserMapper sysUserMapper;
+    private final SysRoleMapper sysRoleMapper;
+    private final SysUserRoleMapper sysUserRoleMapper;
     private final RedisUtils redisUtils;
+    private final RedisThumbUtil redisThumbUtil;
 
     @Value("${shuishu.token.auth-token}")
     private String ymlAuthToken;
@@ -137,5 +133,21 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
             return true;
         }
         return false;
+    }
+
+    @Override
+    public LikedStatusEum thumb(HttpServletRequest request, UserThumbDTO userThumbDTO) {
+        // 判断用户是否有效登录
+        SysUser loginUser = getLoginUser(request);
+        if (loginUser == null) {
+            return LikedStatusEum.ERROR;
+        }
+
+        // redis 记录 +1
+        // 插入点赞记录
+        // 对应内容的点赞数+1
+        LikedStatusEum likedStatusEum = redisThumbUtil.likeStatus(userThumbDTO);
+
+        return likedStatusEum;
     }
 }

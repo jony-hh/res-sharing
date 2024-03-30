@@ -2,7 +2,9 @@ package com.jony.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jony.dto.UserLoginDTO;
+import com.jony.dto.UserThumbDTO;
 import com.jony.entity.SysUser;
+import com.jony.enums.LikedStatusEum;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -27,14 +29,26 @@ public interface UserService extends IService<SysUser> {
     List<String> getUserRole(Long id);
 
     /**
-     * login
+     * feat: login
+     *
+     * @param userLoginDTO,response
+     * @return boolean
      */
     boolean authenticate(UserLoginDTO userLoginDTO, HttpServletResponse response);
 
     /**
-     * logout
+     * feat: logout
+     *
+     * @param request
+     * @return boolean
      */
     boolean logout(HttpServletRequest request);
 
-
+    /**
+     * feat: 用户点赞
+     *
+     * @param request,userThumbDTO
+     * @return boolean
+     */
+    LikedStatusEum thumb(HttpServletRequest request, UserThumbDTO userThumbDTO);
 }

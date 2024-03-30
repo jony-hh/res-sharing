@@ -2,18 +2,17 @@ package com.jony.controller.user;
 
 import com.jony.annotation.AuthCheck;
 import com.jony.api.CommonResult;
-import com.jony.api.ResultCode;
-import com.jony.dto.UserLoginDTO;
-import com.jony.entity.SysUser;
+import com.jony.dto.UserThumbDTO;
+import com.jony.enums.LikedStatusEum;
 import com.jony.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user/operate")
@@ -29,12 +28,9 @@ public class OperateController {
     @PostMapping("thumb")
     @AuthCheck(mustRole = "user")
     @Operation(summary = "点赞操作")
-    public CommonResult<?> thumb(HttpServletRequest request) {
-        boolean result = userService.logout(request);
-        if (result) {
-            return CommonResult.success(ResultCode.SUCCESS);
-        }
-        return CommonResult.failed("退出异常");
+    public CommonResult<?> thumb(HttpServletRequest request,@RequestBody UserThumbDTO userThumbDTO) {
+        LikedStatusEum likedStatusEum = userService.thumb(request,userThumbDTO);
+        return CommonResult.success(likedStatusEum.getCode(), likedStatusEum.getMsg());
     }
 
     // endregion

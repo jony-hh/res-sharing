@@ -2,7 +2,6 @@ package com.jony.controller.res;
 
 
 import com.github.yitter.idgen.YitIdHelper;
-import com.jony.annotation.AuthCheck;
 import com.jony.api.CommonResult;
 import com.jony.convert.ResDocumentConvert;
 import com.jony.dto.ResDocumentDTO;

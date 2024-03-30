@@ -28,7 +28,7 @@ import java.util.List;
  * @since 2024-03-12 12:27:08
  */
 @RestController
-@RequestMapping("resVideo")
+@RequestMapping("res/video")
 @Tag(name = "视频课程接口")
 @Slf4j
 public class ResVideoController {
