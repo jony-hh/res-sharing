@@ -3,10 +3,10 @@ package com.jony.utils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.yitter.idgen.YitIdHelper;
 import com.jony.convert.UserOperateConvert;
-import com.jony.dto.UserThumbCountDTO;
+import com.jony.dto.UserOperateCountDTO;
 import com.jony.dto.UserThumbDTO;
 import com.jony.entity.UserThumb;
-import com.jony.enums.LikedStatusEum;
+import com.jony.enums.ThumbOrStarStatusEum;
 import com.jony.mapper.UserThumbMapper;
 import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.Cursor;
@@ -26,34 +26,34 @@ public class RedisThumbUtil {
     private UserThumbMapper userThumbMapper;
 
     public void likes(Long contentId, Long userId) {
-        String likedKey = RedisThumbKeyUtil.getLikedKey(contentId, userId);
-        redisTemplate.opsForHash().increment(RedisThumbKeyUtil.MAP_KEY_USER_LIKED_COUNT, contentId.toString(), 1);
-        redisTemplate.opsForHash().put(RedisThumbKeyUtil.MAP_KEY_USER_LIKED, likedKey, LikedStatusEum.LIKE.getCode());
+        String likedKey = RedisThumbOrStarKeyUtil.getLikedKey(contentId, userId);
+        redisTemplate.opsForHash().increment(RedisThumbOrStarKeyUtil.MAP_KEY_USER_THUMB_COUNT, contentId.toString(), 1);
+        redisTemplate.opsForHash().put(RedisThumbOrStarKeyUtil.MAP_KEY_USER_THUMB, likedKey, ThumbOrStarStatusEum.THUMB.getCode());
     }
 
 
     public void unLikes(Long contentId, Long userId) {
-        String likedKey = RedisThumbKeyUtil.getLikedKey(contentId, userId);
-        redisTemplate.opsForHash().increment(RedisThumbKeyUtil.MAP_KEY_USER_LIKED_COUNT, contentId.toString(), -1);
-        redisTemplate.opsForHash().put(RedisThumbKeyUtil.MAP_KEY_USER_LIKED, likedKey,LikedStatusEum.UNLIKE.getCode());
+        String likedKey = RedisThumbOrStarKeyUtil.getLikedKey(contentId, userId);
+        redisTemplate.opsForHash().increment(RedisThumbOrStarKeyUtil.MAP_KEY_USER_THUMB_COUNT, contentId.toString(), -1);
+        redisTemplate.opsForHash().put(RedisThumbOrStarKeyUtil.MAP_KEY_USER_THUMB, likedKey,ThumbOrStarStatusEum.UN_THUMB.getCode());
     }
 
 
-    public LikedStatusEum likeStatus(UserThumbDTO userThumbDTO) {
+    public ThumbOrStarStatusEum likeStatus(UserThumbDTO userThumbDTO) {
 
         Long contentId = userThumbDTO.getContentId();
         Long userId = userThumbDTO.getUserId();
 
         // 1、先走redis
-        if (redisTemplate.opsForHash().hasKey(RedisThumbKeyUtil.MAP_KEY_USER_LIKED, RedisThumbKeyUtil.getLikedKey(contentId, userId))) {
-            String o = redisTemplate.opsForHash().get(RedisThumbKeyUtil.MAP_KEY_USER_LIKED, RedisThumbKeyUtil.getLikedKey(contentId, userId)).toString();
+        if (redisTemplate.opsForHash().hasKey(RedisThumbOrStarKeyUtil.MAP_KEY_USER_THUMB, RedisThumbOrStarKeyUtil.getLikedKey(contentId, userId))) {
+            String o = redisTemplate.opsForHash().get(RedisThumbOrStarKeyUtil.MAP_KEY_USER_THUMB, RedisThumbOrStarKeyUtil.getLikedKey(contentId, userId)).toString();
             if ("1".equals(o)) {
                 unLikes(contentId, userId);
-                return LikedStatusEum.UNLIKE;
+                return ThumbOrStarStatusEum.UN_THUMB;
             }
             if ("0".equals(o)) {
                 likes(contentId, userId);
-                return LikedStatusEum.LIKE;
+                return ThumbOrStarStatusEum.THUMB;
             }
         }
         // 2、缓存没有则走mysql
@@ -67,25 +67,25 @@ public class RedisThumbUtil {
             long newId = YitIdHelper.nextId();
             UserThumb userThumb = UserOperateConvert.INSTANCE.toUserThumb(userThumbDTO);
             userThumb.setId(newId);
-            userThumb.setStatus(LikedStatusEum.LIKE.getCode());
+            userThumb.setStatus(ThumbOrStarStatusEum.THUMB.getCode());
             userThumbMapper.insert(userThumb);
             likes(contentId, userId);
-            return LikedStatusEum.LIKE;
+            return ThumbOrStarStatusEum.THUMB;
         }
         if (userLikes.getStatus() == 1) {
             unLikes(contentId, userId);
-            userLikes.setStatus(LikedStatusEum.UNLIKE.getCode());
+            userLikes.setStatus(ThumbOrStarStatusEum.UN_THUMB.getCode());
             userThumbMapper.updateById(userLikes);
-            return LikedStatusEum.UNLIKE;
+            return ThumbOrStarStatusEum.UN_THUMB;
         }
 
         if (userLikes.getStatus() == 0) {
             likes(contentId, userId);
-            userLikes.setStatus(LikedStatusEum.LIKE.getCode());
+            userLikes.setStatus(ThumbOrStarStatusEum.THUMB.getCode());
             userThumbMapper.updateById(userLikes);
-            return LikedStatusEum.LIKE;
+            return ThumbOrStarStatusEum.THUMB;
         }
-        return LikedStatusEum.ERROR;
+        return ThumbOrStarStatusEum.ERROR;
     }
 
 
@@ -95,7 +95,7 @@ public class RedisThumbUtil {
      * @return List
      */
     public List<UserThumbDTO> getLikedDataFromRedis() {
-        Cursor<Map.Entry<Object, Object>> scan = redisTemplate.opsForHash().scan(RedisThumbKeyUtil.MAP_KEY_USER_LIKED, ScanOptions.NONE);
+        Cursor<Map.Entry<Object, Object>> scan = redisTemplate.opsForHash().scan(RedisThumbOrStarKeyUtil.MAP_KEY_USER_THUMB, ScanOptions.NONE);
         List<UserThumbDTO> list = new ArrayList<>();
         while (scan.hasNext()) {
             Map.Entry<Object, Object> entry = scan.next();
@@ -108,7 +108,7 @@ public class RedisThumbUtil {
             UserThumbDTO userLikeDetail = new UserThumbDTO(infoId, likeUserId, null, value);
             list.add(userLikeDetail);
             // 存到 list 后从 Redis 中删除
-            redisTemplate.opsForHash().delete(RedisThumbKeyUtil.MAP_KEY_USER_LIKED, key);
+            redisTemplate.opsForHash().delete(RedisThumbOrStarKeyUtil.MAP_KEY_USER_THUMB, key);
         }
         return list;
     }
@@ -119,16 +119,16 @@ public class RedisThumbUtil {
      *
      * @return List
      */
-    public List<UserThumbCountDTO> getLikedCountFromRedis() {
-        Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(RedisThumbKeyUtil.MAP_KEY_USER_LIKED_COUNT, ScanOptions.NONE);
-        List<UserThumbCountDTO> list = new ArrayList<>();
+    public List<UserOperateCountDTO> getLikedCountFromRedis() {
+        Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(RedisThumbOrStarKeyUtil.MAP_KEY_USER_THUMB_COUNT, ScanOptions.NONE);
+        List<UserOperateCountDTO> list = new ArrayList<>();
         while (cursor.hasNext()) {
             Map.Entry<Object, Object> map = cursor.next();
             Long key = (Long) map.getKey();
             Integer value = (Integer) map.getValue();
-            UserThumbCountDTO userThumbCountDTO = new UserThumbCountDTO(key, value);
+            UserOperateCountDTO userThumbCountDTO = new UserOperateCountDTO(key, value);
             list.add(userThumbCountDTO);
-            redisTemplate.opsForHash().delete(RedisThumbKeyUtil.MAP_KEY_USER_LIKED_COUNT, key);
+            redisTemplate.opsForHash().delete(RedisThumbOrStarKeyUtil.MAP_KEY_USER_THUMB_COUNT, key);
         }
         return list;
     }

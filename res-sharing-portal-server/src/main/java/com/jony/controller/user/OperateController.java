@@ -2,8 +2,9 @@ package com.jony.controller.user;
 
 import com.jony.annotation.AuthCheck;
 import com.jony.api.CommonResult;
+import com.jony.dto.UserStarDTO;
 import com.jony.dto.UserThumbDTO;
-import com.jony.enums.LikedStatusEum;
+import com.jony.enums.ThumbOrStarStatusEum;
 import com.jony.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,8 +30,17 @@ public class OperateController {
     @AuthCheck(mustRole = "user")
     @Operation(summary = "点赞操作")
     public CommonResult<?> thumb(HttpServletRequest request,@RequestBody UserThumbDTO userThumbDTO) {
-        LikedStatusEum likedStatusEum = userService.thumb(request,userThumbDTO);
-        return CommonResult.success(likedStatusEum.getCode(), likedStatusEum.getMsg());
+        ThumbOrStarStatusEum thumbOrStarStatusEum = userService.thumb(request,userThumbDTO);
+        return CommonResult.success(thumbOrStarStatusEum.getCode(), thumbOrStarStatusEum.getMsg());
+    }
+
+
+    @PostMapping("star")
+    @AuthCheck(mustRole = "user")
+    @Operation(summary = "收藏操作")
+    public CommonResult<?> star(HttpServletRequest request,@RequestBody UserStarDTO userStarDTO) {
+        ThumbOrStarStatusEum thumbOrStarStatusEum = userService.star(request,userStarDTO);
+        return CommonResult.success(thumbOrStarStatusEum.getCode(), thumbOrStarStatusEum.getMsg());
     }
 
     // endregion

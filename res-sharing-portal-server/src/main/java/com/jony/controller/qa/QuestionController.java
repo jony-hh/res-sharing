@@ -1,4 +1,4 @@
-package com.jony.controller;
+package com.jony.controller.qa;
 
 import com.github.yitter.idgen.YitIdHelper;
 import com.jony.api.CommonResult;

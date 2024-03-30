@@ -3,11 +3,12 @@ package com.jony.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jony.dto.UserLoginDTO;
+import com.jony.dto.UserStarDTO;
 import com.jony.dto.UserThumbDTO;
 import com.jony.entity.SysRole;
 import com.jony.entity.SysUser;
 import com.jony.entity.SysUserRole;
-import com.jony.enums.LikedStatusEum;
+import com.jony.enums.ThumbOrStarStatusEum;
 import com.jony.enums.RedisKeyEnum;
 import com.jony.exception.ErrorCode;
 import com.jony.exception.ServerException;
@@ -16,6 +17,7 @@ import com.jony.mapper.SysUserMapper;
 import com.jony.mapper.SysUserRoleMapper;
 import com.jony.service.UserService;
 import com.jony.utils.PasswordUtils;
+import com.jony.utils.RedisStarUtil;
 import com.jony.utils.RedisThumbUtil;
 import com.jony.utils.RedisUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +41,7 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
     private final SysUserRoleMapper sysUserRoleMapper;
     private final RedisUtils redisUtils;
     private final RedisThumbUtil redisThumbUtil;
+    private final RedisStarUtil redisStarUtil;
 
     @Value("${shuishu.token.auth-token}")
     private String ymlAuthToken;
@@ -136,18 +139,24 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
     }
 
     @Override
-    public LikedStatusEum thumb(HttpServletRequest request, UserThumbDTO userThumbDTO) {
+    public ThumbOrStarStatusEum thumb(HttpServletRequest request, UserThumbDTO userThumbDTO) {
         // 判断用户是否有效登录
         SysUser loginUser = getLoginUser(request);
         if (loginUser == null) {
-            return LikedStatusEum.ERROR;
+            return ThumbOrStarStatusEum.ERROR;
         }
+        ThumbOrStarStatusEum thumbOrStarStatusEum = redisThumbUtil.likeStatus(userThumbDTO);
+        return thumbOrStarStatusEum;
+    }
 
-        // redis 记录 +1
-        // 插入点赞记录
-        // 对应内容的点赞数+1
-        LikedStatusEum likedStatusEum = redisThumbUtil.likeStatus(userThumbDTO);
-
-        return likedStatusEum;
+    @Override
+    public ThumbOrStarStatusEum star(HttpServletRequest request, UserStarDTO userStarDTO) {
+        // 判断用户是否有效登录
+        SysUser loginUser = getLoginUser(request);
+        if (loginUser == null) {
+            return ThumbOrStarStatusEum.ERROR;
+        }
+        ThumbOrStarStatusEum thumbOrStarStatusEum = redisStarUtil.starStatus(userStarDTO);
+        return thumbOrStarStatusEum;
     }
 }
