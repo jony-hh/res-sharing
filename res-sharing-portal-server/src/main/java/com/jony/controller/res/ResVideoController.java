@@ -2,6 +2,7 @@ package com.jony.controller.res;
 
 
 import com.github.yitter.idgen.YitIdHelper;
+import com.jony.annotation.AuthCheck;
 import com.jony.api.CommonResult;
 import com.jony.convert.ResVideoConvert;
 import com.jony.dto.ResVideoDTO;
@@ -48,13 +49,12 @@ public class ResVideoController {
 
     @PostMapping("/addVideo")
     @Operation(summary = "用户上传视频课程资源")
+    @AuthCheck(mustRole = "user")
     public CommonResult<?> addVideo(@RequestBody ResVideoDTO resVideoDTO) {
         ResVideo resVideo = ResVideoConvert.INSTANCE.toResVideo(resVideoDTO);
-        // 雪花漂移id
-        long id = YitIdHelper.nextId();
-        resVideo.setId(id);
+        resVideo.setId(YitIdHelper.nextId());
         String resultMessage = resVideoService.addVideo(resVideo);
-        return CommonResult.success(resVideo, resultMessage);
+        return CommonResult.success(null, resultMessage);
     }
 
     @GetMapping("/pagingQuery")
@@ -73,7 +73,7 @@ public class ResVideoController {
 
 
     @PostMapping("/uploadVideo")
-    @Operation(summary = "用户上传视频课程资源")
+    @Operation(summary = "用户上传视频课程资源至oss")
     public CommonResult<?> uploadDocument(HttpServletRequest request,
                                           @RequestParam("file") MultipartFile[] fileList) throws Exception {
         String uploadUser = request.getParameter("uploadUser");

@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2018-02-24 下午03:09:50
  * @version 1.1 (GitHub文档: <a href="https://github.com/whvcse/RedisUtil">...</a> )
  */
+@Component
 public class RedisUtil {
 	private StringRedisTemplate redisTemplate;
 

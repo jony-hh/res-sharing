@@ -41,6 +41,18 @@ public class SysUser implements Serializable {
     private String email;
     // 邮箱绑定时间
     private Timestamp emailBindTime;
+
+
+    // 新加字段
+    private String profession;
+
+    private String company;
+
+    private String interests;
+
+    private String introduction;
+
+
     // 头像
     private String avatar;
     // 头像 200x200x80

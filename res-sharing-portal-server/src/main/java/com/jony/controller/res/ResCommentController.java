@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("res/video/comment")
+@RequestMapping("res/comment")
 @Tag(name = "课程讨论")
 @RequiredArgsConstructor
 public class ResCommentController {
@@ -29,7 +29,7 @@ public class ResCommentController {
     }
 
 
-    @GetMapping("/send")
+    @PostMapping("/send")
     @Operation(summary = "发表评论")
     @AuthCheck(mustRole = "user")
     public CommonResult<?> comment (@RequestBody ResCommentDTO resCommentDTO) {
@@ -41,8 +41,8 @@ public class ResCommentController {
     @DeleteMapping("/delete")
     @Operation(summary = "删除评论")
     @AuthCheck(mustRole = "user")
-    public CommonResult<?> deleteComment (@RequestParam Long commentID,@RequestParam Long userId) {
-        boolean result = resCommentService.deleteComment(commentID,userId);
+    public CommonResult<?> deleteComment (@RequestParam Long commentId,@RequestParam Long userId) {
+        boolean result = resCommentService.deleteComment(commentId,userId);
         return CommonResult.success(result);
     }
 }

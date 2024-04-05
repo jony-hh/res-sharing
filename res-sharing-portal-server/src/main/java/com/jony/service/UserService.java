@@ -1,10 +1,7 @@
 package com.jony.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.jony.dto.UserLoginDTO;
-import com.jony.dto.UserRegisterDTO;
-import com.jony.dto.UserStarDTO;
-import com.jony.dto.UserThumbDTO;
+import com.jony.dto.*;
 import com.jony.entity.SysUser;
 import com.jony.enums.ThumbOrStarStatusEum;
 import jakarta.servlet.http.HttpServletRequest;
@@ -69,4 +66,11 @@ public interface UserService extends IService<SysUser> {
      */
     ThumbOrStarStatusEum star(HttpServletRequest request, UserStarDTO userStarDTO);
 
+    /**
+     * feat: 用户更新信息
+     *
+     * @param userUpdateDTO
+     * @return boolean
+     */
+    boolean updateUser(UserUpdateDTO userUpdateDTO);
 }

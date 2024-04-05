@@ -3,10 +3,8 @@ package com.jony.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yitter.idgen.YitIdHelper;
-import com.jony.dto.UserLoginDTO;
-import com.jony.dto.UserRegisterDTO;
-import com.jony.dto.UserStarDTO;
-import com.jony.dto.UserThumbDTO;
+import com.jony.convert.SysUserConvert;
+import com.jony.dto.*;
 import com.jony.entity.SysAuth;
 import com.jony.entity.SysRole;
 import com.jony.entity.SysUser;
@@ -190,5 +188,13 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
         }
         ThumbOrStarStatusEum thumbOrStarStatusEum = redisStarUtil.starStatus(userStarDTO);
         return thumbOrStarStatusEum;
+    }
+
+    @Override
+    public boolean updateUser(UserUpdateDTO userUpdateDTO) {
+        SysUser user = this.getById(userUpdateDTO.getId());
+        SysUserConvert.INSTANCE.updateTargetFromSource(userUpdateDTO,user);
+        boolean b = this.updateById(user);
+        return b;
     }
 }

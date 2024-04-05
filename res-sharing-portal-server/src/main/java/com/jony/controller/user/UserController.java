@@ -5,6 +5,7 @@ import com.jony.api.CommonResult;
 import com.jony.api.ResultCode;
 import com.jony.dto.UserLoginDTO;
 import com.jony.dto.UserRegisterDTO;
+import com.jony.dto.UserUpdateDTO;
 import com.jony.entity.SysUser;
 import com.jony.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,6 +42,16 @@ public class UserController {
     @Operation(summary = "注册站内账户")
     public CommonResult<?> localRegister(@RequestBody UserRegisterDTO userRegisterDTO) {
         boolean result = userService.localRegister(userRegisterDTO);
+        if (result) {
+            return CommonResult.success(ResultCode.SUCCESS);
+        }
+        return CommonResult.failed("登录失败");
+    }
+
+    @PutMapping("update")
+    @Operation(summary = "用户更新信息")
+    public CommonResult<?> updateUser(@RequestBody UserUpdateDTO userUpdateDTO) {
+        boolean result = userService.updateUser(userUpdateDTO);
         if (result) {
             return CommonResult.success(ResultCode.SUCCESS);
         }

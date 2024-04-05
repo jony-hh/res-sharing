@@ -4,6 +4,7 @@ import com.github.yitter.idgen.YitIdHelper;
 import com.jony.annotation.AuthCheck;
 import com.jony.api.CommonResult;
 import com.jony.convert.UserAnswerConvert;
+import com.jony.convert.UserQuestionConvert;
 import com.jony.dto.AnswerDTO;
 import com.jony.dto.QuestionDTO;
 import com.jony.dto.UserStarDTO;
@@ -60,20 +61,18 @@ public class OperateController {
 
     @PostMapping("/pose/question")
     @Operation(summary = "提问题")
+    @AuthCheck(mustRole = "user")
     public CommonResult<?> poseQuestion(@RequestBody QuestionDTO questionDTO) {
-        UserQuestion question = new UserQuestion();
-        long id = YitIdHelper.nextId();
-        question.setId(id);
-        question.setUserId(questionDTO.getUserId());
-        question.setTitle(questionDTO.getTitle());
-        question.setContent(questionDTO.getContent());
+        UserQuestion question = UserQuestionConvert.INSTANCE.toUserQuestion(questionDTO);
+        question.setId(YitIdHelper.nextId());
         String resultMessage = userQuestionService.addQuestion(question);
-        return CommonResult.success(question, resultMessage);
+        return CommonResult.success(null, resultMessage);
     }
 
 
     @PostMapping("/write/answer")
     @Operation(summary = "写回答")
+    @AuthCheck(mustRole = "user")
     public CommonResult<?> writeAnswer(@RequestBody AnswerDTO answerDTO) {
         UserAnswer userAnswer = UserAnswerConvert.INSTANCE.toUserAnswer(answerDTO);
         userAnswer.setId(YitIdHelper.nextId());
