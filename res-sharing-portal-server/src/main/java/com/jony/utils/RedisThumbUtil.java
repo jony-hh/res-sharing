@@ -3,7 +3,6 @@ package com.jony.utils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.yitter.idgen.YitIdHelper;
 import com.jony.convert.UserOperateConvert;
-import com.jony.dto.UserOperateCountDTO;
 import com.jony.dto.UserThumbDTO;
 import com.jony.entity.UserThumb;
 import com.jony.enums.ThumbOrStarStatusEum;
@@ -21,7 +20,9 @@ import java.util.Map;
 @Component
 public class RedisThumbUtil {
     @Resource
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
+    @Resource
+    private RedisUtil redisUtil;
     @Resource
     private UserThumbMapper userThumbMapper;
 
@@ -119,18 +120,11 @@ public class RedisThumbUtil {
      *
      * @return List
      */
-    public List<UserOperateCountDTO> getLikedCountFromRedis() {
-        Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(RedisThumbOrStarKeyUtil.MAP_KEY_USER_THUMB_COUNT, ScanOptions.NONE);
-        List<UserOperateCountDTO> list = new ArrayList<>();
-        while (cursor.hasNext()) {
-            Map.Entry<Object, Object> map = cursor.next();
-            Long key = (Long) map.getKey();
-            Integer value = (Integer) map.getValue();
-            UserOperateCountDTO userThumbCountDTO = new UserOperateCountDTO(key, value);
-            list.add(userThumbCountDTO);
-            redisTemplate.opsForHash().delete(RedisThumbOrStarKeyUtil.MAP_KEY_USER_THUMB_COUNT, key);
-        }
-        return list;
+    public Integer getLikedCountFromRedis(String id) {
+        Object original = redisUtil.hGet(RedisThumbOrStarKeyUtil.MAP_KEY_THUMB_COUNT, id);
+        Object variational = redisUtil.hGet(RedisThumbOrStarKeyUtil.MAP_KEY_USER_THUMB_COUNT, id);
+        Integer count = (Integer) original + (Integer) variational;
+        return count;
     }
 
 

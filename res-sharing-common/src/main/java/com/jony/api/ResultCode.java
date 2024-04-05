@@ -10,6 +10,7 @@ import lombok.Getter;
 public enum ResultCode implements IErrorCode {
     SUCCESS(200, "success!"),
     START_SUCCESS(200, "您好，项目已启动，祝您使用愉快！"),
+    OPERATE_SUCCESS(200, "操作成功"),
     LOGOUT_SUCCESS(200, "退出登录成功"),
     PARAMS_ERROR(400, "请求参数错误"),
     NOT_LOGIN_ERROR(401, "未登录"),

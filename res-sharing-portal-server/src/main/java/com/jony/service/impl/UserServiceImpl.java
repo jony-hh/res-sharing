@@ -2,16 +2,20 @@ package com.jony.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.yitter.idgen.YitIdHelper;
 import com.jony.dto.UserLoginDTO;
+import com.jony.dto.UserRegisterDTO;
 import com.jony.dto.UserStarDTO;
 import com.jony.dto.UserThumbDTO;
+import com.jony.entity.SysAuth;
 import com.jony.entity.SysRole;
 import com.jony.entity.SysUser;
 import com.jony.entity.SysUserRole;
-import com.jony.enums.ThumbOrStarStatusEum;
 import com.jony.enums.RedisKeyEnum;
+import com.jony.enums.ThumbOrStarStatusEum;
 import com.jony.exception.ErrorCode;
 import com.jony.exception.ServerException;
+import com.jony.mapper.SysAuthMapper;
 import com.jony.mapper.SysRoleMapper;
 import com.jony.mapper.SysUserMapper;
 import com.jony.mapper.SysUserRoleMapper;
@@ -37,6 +41,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements UserService {
 
     private final SysUserMapper sysUserMapper;
+    private final SysAuthMapper sysAuthMapper;
     private final SysRoleMapper sysRoleMapper;
     private final SysUserRoleMapper sysUserRoleMapper;
     private final RedisUtils redisUtils;
@@ -80,6 +85,33 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
             }
         }
         return loginUser;
+    }
+
+    @Override
+    public boolean localRegister(UserRegisterDTO userRegisterDTO) {
+        // 1. 判断密码是否一样
+        String password = userRegisterDTO.getPassword();
+        String confirmPassword = userRegisterDTO.getConfirmPassword();
+        if (!password.equals(confirmPassword)) {
+            return false;
+        }
+        // 2、判断是否被注册
+        LambdaQueryWrapper<SysAuth> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(SysAuth::getIdentifier,userRegisterDTO.getUsername());
+        SysAuth sysAuth = sysAuthMapper.selectOne(lambdaQueryWrapper);
+        if (sysAuth!=null) {
+            return false;
+        }
+        // 3、保存用户
+        String encryptPassword = DigestUtils.md5DigestAsHex((salt + password).getBytes());
+        SysAuth newAuth = new SysAuth();
+        newAuth.setUserId(YitIdHelper.nextId());
+        newAuth.setAuthType(userRegisterDTO.getAuthType());
+        newAuth.setIdentifier(userRegisterDTO.getUsername());
+        newAuth.setCertificate(encryptPassword);
+        int result = sysAuthMapper.insert(newAuth);
+
+        return result == 1;
     }
 
     @Override

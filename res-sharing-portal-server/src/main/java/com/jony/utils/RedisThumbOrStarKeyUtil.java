@@ -13,12 +13,17 @@ public class RedisThumbOrStarKeyUtil {
     public static final String MAP_KEY_USER_THUMB_COUNT = "MAP_KEY_USER_THUMB_COUNT";
 
     /**
-     * 保存不同用户点赞数据的key
+     * 保存不同内容被点赞总数的key【总数】
+     */
+    public static final String MAP_KEY_THUMB_COUNT = "MAP_KEY_THUMB_COUNT";
+
+    /**
+     * 保存不同用户收藏数据的key
      */
     public static final String MAP_KEY_USER_STAR = "MAP_KEY_USER_STAR";
 
     /**
-     * 保存不同内容被点赞总数的key
+     * 保存不同内容被收藏总数的key
      */
     public static final String MAP_KEY_USER_STAR_COUNT = "MAP_KEY_USER_STAR_COUNT";
 

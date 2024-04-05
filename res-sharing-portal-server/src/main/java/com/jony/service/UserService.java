@@ -2,6 +2,7 @@ package com.jony.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jony.dto.UserLoginDTO;
+import com.jony.dto.UserRegisterDTO;
 import com.jony.dto.UserStarDTO;
 import com.jony.dto.UserThumbDTO;
 import com.jony.entity.SysUser;
@@ -20,6 +21,13 @@ public interface UserService extends IService<SysUser> {
      * @return SysUser
      */
     SysUser getLoginUser(HttpServletRequest request);
+
+    /**
+     * feat: 注册站内账户
+     *
+     * @param userRegisterDTO
+     */
+    boolean localRegister(UserRegisterDTO userRegisterDTO);
 
     /**
      * feat: 获取当前用户
@@ -60,4 +68,5 @@ public interface UserService extends IService<SysUser> {
      * @return boolean
      */
     ThumbOrStarStatusEum star(HttpServletRequest request, UserStarDTO userStarDTO);
+
 }

@@ -4,6 +4,7 @@ import com.jony.annotation.AuthCheck;
 import com.jony.api.CommonResult;
 import com.jony.api.ResultCode;
 import com.jony.dto.UserLoginDTO;
+import com.jony.dto.UserRegisterDTO;
 import com.jony.entity.SysUser;
 import com.jony.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +31,16 @@ public class UserController {
     @Operation(summary = "站内账户登录")
     public CommonResult<?> localLogin(@RequestBody UserLoginDTO userLoginDTO, HttpServletResponse response) {
         boolean result = userService.authenticate(userLoginDTO, response);
+        if (result) {
+            return CommonResult.success(ResultCode.SUCCESS);
+        }
+        return CommonResult.failed("登录失败");
+    }
+
+    @PostMapping("localRegister")
+    @Operation(summary = "注册站内账户")
+    public CommonResult<?> localRegister(@RequestBody UserRegisterDTO userRegisterDTO) {
+        boolean result = userService.localRegister(userRegisterDTO);
         if (result) {
             return CommonResult.success(ResultCode.SUCCESS);
         }
