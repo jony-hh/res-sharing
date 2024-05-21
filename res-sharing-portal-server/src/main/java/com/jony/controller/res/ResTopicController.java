@@ -1,17 +1,18 @@
 package com.jony.controller.res;
 
 
+import com.github.yitter.idgen.YitIdHelper;
 import com.jony.api.CommonResult;
+import com.jony.convert.ResTopicConvert;
+import com.jony.dto.ResTopicDTO;
 import com.jony.entity.ResTopic;
+import com.jony.mapper.ResTopicMapper;
 import com.jony.service.ResTopicService;
 import com.jony.service.impl.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,9 +29,8 @@ public class ResTopicController {
 
     @Resource
     private ResTopicService resTopicService;
-
     @Resource
-    FileService fileService;
+    private ResTopicMapper resTopicMapper;
 
     @GetMapping("/fetchWhole")
     @Operation(summary = "取得所有话题元素数据")
@@ -46,12 +46,26 @@ public class ResTopicController {
         return CommonResult.success(documentList);
     }
 
-    @GetMapping("/fetchById")
+    @GetMapping("/single")
     @Operation(summary = "根据id查询单个话题元素数据")
     public CommonResult<?> fetchById(@RequestParam("id") Long id) {
         ResTopic documentList = resTopicService.fetchById(id);
         return CommonResult.success(documentList);
     }
+
+    // region
+
+    @PostMapping
+    @Operation(summary = "新增话题元素数据")
+    public CommonResult<?> add(@RequestBody ResTopicDTO resTopicDTO) {
+        ResTopic resTopic = ResTopicConvert.INSTANCE.toResTopic(resTopicDTO);
+        resTopic.setId(YitIdHelper.nextId());
+        int insert = resTopicMapper.insert(resTopic);
+        return CommonResult.success(insert > 0 ? "success" : "failed");
+    }
+
+
+    // endregion
 
 }
 

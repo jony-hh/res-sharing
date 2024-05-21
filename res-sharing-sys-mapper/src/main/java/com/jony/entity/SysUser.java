@@ -36,7 +36,7 @@ public class SysUser implements Serializable {
     // 手机号码绑定时间
     private Timestamp mobileBindTime;
     // 用户状态（0权限缺失，1权限正常）
-    private Long status;
+    private Integer status;
     // 邮箱(唯一)
     private String email;
     // 邮箱绑定时间

@@ -74,7 +74,7 @@ public class TokenUtils {
      * @param response     响应
      * @return 是否成功
      */
-    public boolean setUserInfoVo(UserInfoVo userInfoVo, Boolean isRememberMe, HttpServletResponse response) {
+    public String setUserInfoVo(UserInfoVo userInfoVo, Boolean isRememberMe, HttpServletResponse response) {
         if (userInfoVo != null) {
             String authToken = createToken();
             if (StringUtils.hasText(authToken)) {
@@ -95,10 +95,10 @@ public class TokenUtils {
                 authTokenCacheDto.setCreateTime(new Timestamp(System.currentTimeMillis()));
                 userAuthTokenList.add(authTokenCacheDto);
                 setUserAuthTokenList(userInfoVo.getId(), userAuthTokenList);
-                return true;
+                return authToken;
             }
         }
-        return false;
+        return null;
     }
 
     /**

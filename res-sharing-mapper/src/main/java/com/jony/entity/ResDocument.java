@@ -26,6 +26,11 @@ public class ResDocument implements Serializable {
     private Long id;
 
     /**
+     * userId
+     */
+    private Long userId;
+
+    /**
      * 文档标题
      */
     private String title;

@@ -3,17 +3,13 @@ package com.jony.controller;
 import co.elastic.clients.elasticsearch._types.mapping.Property;
 import co.elastic.clients.elasticsearch._types.mapping.TypeMapping;
 import co.elastic.clients.elasticsearch.cat.indices.IndicesRecord;
-import co.elastic.clients.elasticsearch.cat.nodes.NodesRecord;
 import com.jony.api.CommonResult;
 import com.jony.api.IndexApi;
-import com.jony.api.NodeApi;
-import com.jony.config.ElasticSearchConfigProperties;
+import com.jony.init.InitializeAndImport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -23,22 +19,15 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("es/index")
 @RequiredArgsConstructor
-public class IndexInfoController {
+public class IndicesController {
 
     private final IndexApi indexApi;
-    private final NodeApi nodeApi;
-    private final ElasticSearchConfigProperties esConfig;
+    private final InitializeAndImport initImport;
 
-    @GetMapping("getAllNodes")
-    public CommonResult<?> getAllNodes() {
-        List<NodesRecord> allNodes = nodeApi.getAllNodes();
-        return CommonResult.success(allNodes);
-    }
 
     @Operation(summary = "获取索引映射")
     @GetMapping("getMapping")
-    public CommonResult<Map<String, Property>> getMapping() {
-        String indexName = esConfig.getIndex();
+    public CommonResult<Map<String, Property>> getMapping(@RequestParam("indexName") String indexName) {
         TypeMapping indexMapping = indexApi.getMapping(indexName);
         return CommonResult.success(indexMapping.properties());
 
@@ -46,8 +35,7 @@ public class IndexInfoController {
 
     @Operation(summary = "查询索引细节")
     @GetMapping("queryIndexDetail")
-    public CommonResult<Map<String, Property>> queryIndexContent() {
-        String indexName = esConfig.getIndex();
+    public CommonResult<Map<String, Property>> queryIndexContent(@RequestParam("indexName") String indexName) {
         Map<String, Property> stringPropertyMap = indexApi.queryIndexDetail(indexName);
         return CommonResult.success(stringPropertyMap);
 
@@ -64,4 +52,19 @@ public class IndexInfoController {
 
     }
 
+
+    @Operation(summary = "删除某个索引")
+    @DeleteMapping("deleteIndex")
+    public CommonResult<String> deleteIndex(@RequestParam("indexName") String indexName) {
+        indexApi.deleteIndex(indexName);
+        return CommonResult.success("删除成功");
+    }
+
+
+    @Operation(summary = "手动初始化索引")
+    @GetMapping("initIndex")
+    public CommonResult<String> initIndex() throws Exception {
+        initImport.initAndImport();
+        return CommonResult.success("初始化成功");
+    }
 }

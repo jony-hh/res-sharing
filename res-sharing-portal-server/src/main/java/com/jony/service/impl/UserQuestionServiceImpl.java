@@ -10,7 +10,9 @@ import com.jony.service.UserQuestionService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -27,7 +29,9 @@ public class UserQuestionServiceImpl extends ServiceImpl<UserQuestionMapper, Use
 
     @Override
     public List<UserQuestion> fetchWhole() {
-        return this.list();
+        return this.list().stream()
+                .sorted(Comparator.comparing(UserQuestion::getUpdatedTime).reversed())
+                .collect(Collectors.toList());
     }
 
     @Override

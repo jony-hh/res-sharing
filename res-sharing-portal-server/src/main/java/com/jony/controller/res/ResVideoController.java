@@ -1,19 +1,23 @@
 package com.jony.controller.res;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.yitter.idgen.YitIdHelper;
-import com.jony.annotation.AuthCheck;
 import com.jony.api.CommonResult;
 import com.jony.convert.ResVideoConvert;
 import com.jony.dto.ResVideoDTO;
+import com.jony.dto.ResVideoDetailDTO;
 import com.jony.entity.ResVideo;
+import com.jony.entity.ResVideoDetail;
+import com.jony.mapper.ResVideoDetailMapper;
 import com.jony.service.ResVideoService;
 import com.jony.service.impl.FileService;
 import com.jony.utils.PathUtils;
+import com.jony.vo.CourseVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,10 +36,12 @@ import java.util.List;
 @RequestMapping("res/video")
 @Tag(name = "视频课程接口")
 @Slf4j
+@RequiredArgsConstructor
 public class ResVideoController {
 
-    @Resource
-    private ResVideoService resVideoService;
+    private final ResVideoService resVideoService;
+    private final ResVideoDetailMapper resVideoDetailMapper;
+
 
     @Resource
     FileService fileService;
@@ -47,15 +53,13 @@ public class ResVideoController {
         return CommonResult.success(documentList);
     }
 
-    @PostMapping("/addVideo")
-    @Operation(summary = "用户上传视频课程资源")
-    @AuthCheck(mustRole = "user")
-    public CommonResult<?> addVideo(@RequestBody ResVideoDTO resVideoDTO) {
-        ResVideo resVideo = ResVideoConvert.INSTANCE.toResVideo(resVideoDTO);
-        resVideo.setId(YitIdHelper.nextId());
-        String resultMessage = resVideoService.addVideo(resVideo);
-        return CommonResult.success(null, resultMessage);
+    @GetMapping("/fetchByUserId")
+    @Operation(summary = "取得某个用户所有视频课程数据")
+    public CommonResult<?> fetchByUserId(@RequestParam("userId") Long userId) {
+        List<ResVideo> documentList = resVideoService.fetchByUserId(userId);
+        return CommonResult.success(documentList);
     }
+
 
     @GetMapping("/pagingQuery")
     @Operation(summary = "分页查询视频课程数据")
@@ -64,23 +68,51 @@ public class ResVideoController {
         return CommonResult.success(documentList);
     }
 
-    @GetMapping("/fetchById")
-    @Operation(summary = "根据id查询单个视频课程数据")
+    @GetMapping("/single")
+    @Operation(summary = "根据id查询单个课程的数据")
     public CommonResult<?> fetchById(@RequestParam("id") Long id) {
-        ResVideo documentList = resVideoService.fetchById(id);
-        return CommonResult.success(documentList);
+        ResVideo video = resVideoService.fetchById(id);
+        LambdaQueryWrapper<ResVideoDetail> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(ResVideoDetail::getVideoId, id);
+        wrapper.eq(ResVideoDetail::getPublishStatus, 1);
+        List<ResVideoDetail> resVideoDetails = resVideoDetailMapper.selectList(wrapper);
+        CourseVO courseVO = ResVideoConvert.INSTANCE.toCourseVO(video);
+        courseVO.setVideoDetailList(resVideoDetails);
+        return CommonResult.success(courseVO);
+    }
+
+
+    @PostMapping("/addCourse")
+    @Operation(summary = "用户创建课程")
+    public CommonResult<?> addCourse(@RequestBody ResVideoDTO resVideoDTO) {
+        // 判断标题是否敏感
+        // String content = resVideoDTO.getCourseName();
+        // List<String> wordList = SensitiveWordHelper.findAll(content);
+        // if (!wordList.isEmpty()) {
+        //     return CommonResult.failed("课程名违规，请重试！");
+        // }
+        ResVideo resVideo = ResVideoConvert.INSTANCE.toResVideo(resVideoDTO);
+        resVideo.setId(YitIdHelper.nextId());
+        resVideo.setPublishStatus(0);
+        ResVideo video = resVideoService.addVideo(resVideo);
+        return CommonResult.success(video);
+    }
+
+
+    @PostMapping("/addVideo")
+    @Operation(summary = "用户上传视频")
+    public CommonResult<?> addVideo(@RequestBody ResVideoDetailDTO resVideoDetailDTO) {
+        ResVideoDetail resVideoDetail = ResVideoConvert.INSTANCE.toResVideoDetail(resVideoDetailDTO);
+        resVideoDetail.setId(YitIdHelper.nextId());
+        resVideoDetail.setPublishStatus(0);
+        int insert = resVideoDetailMapper.insert(resVideoDetail);
+        return CommonResult.success(null, insert > 0 ? "success" : "failed");
     }
 
 
     @PostMapping("/uploadVideo")
     @Operation(summary = "用户上传视频课程资源至oss")
-    public CommonResult<?> uploadDocument(HttpServletRequest request,
-                                          @RequestParam("file") MultipartFile[] fileList) throws Exception {
-        String uploadUser = request.getParameter("uploadUser");
-        if (uploadUser.isEmpty()) {
-            return CommonResult.failed("upload-user is empty");
-        }
-        log.info("upload-user:{}", uploadUser);
+    public CommonResult<?> uploadVideo(@RequestParam("file") MultipartFile[] fileList) throws Exception {
         List<HashMap<String, String>> urlList = new ArrayList<>();
         for (MultipartFile multipartFile : fileList) {
             // 解析文件信息和保存

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jony.entity.SysAuth;
 import com.jony.enums.UserEnum;
 import com.jony.security.dto.UserRegisterDto;
-import com.jony.security.vo.UserInfoVo;
 import jakarta.servlet.http.HttpServletResponse;
 
 
@@ -26,7 +25,7 @@ public interface SysAuthService extends IService<SysAuth> {
      * @param response     -
      * @return -
      */
-    UserInfoVo login(String name, String pwd, UserEnum.AuthType authType, Boolean isRememberMe, HttpServletResponse response);
+    String login(String name, String pwd, UserEnum.AuthType authType, Boolean isRememberMe, HttpServletResponse response);
 
     boolean register(UserRegisterDto userRegisterDto, String registerType, HttpServletResponse response);
 }

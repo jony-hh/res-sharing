@@ -93,7 +93,7 @@ public class IndexApi {
             throw new ServerException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
 
-        log.info("{} 索引是否存在: {}", indexName, booleanResponse.value());
+        log.info("{} 索引是否已存在: {}", indexName, booleanResponse.value());
 
         return booleanResponse.value();
     }

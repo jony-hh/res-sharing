@@ -3,15 +3,14 @@ package com.jony.controller.user;
 import com.github.yitter.idgen.YitIdHelper;
 import com.jony.annotation.AuthCheck;
 import com.jony.api.CommonResult;
+import com.jony.api.ResultCode;
 import com.jony.convert.UserAnswerConvert;
 import com.jony.convert.UserQuestionConvert;
-import com.jony.dto.AnswerDTO;
-import com.jony.dto.QuestionDTO;
-import com.jony.dto.UserStarDTO;
-import com.jony.dto.UserThumbDTO;
+import com.jony.dto.*;
 import com.jony.entity.UserAnswer;
 import com.jony.entity.UserQuestion;
 import com.jony.enums.ThumbOrStarStatusEum;
+import com.jony.mapper.SysUserMapper;
 import com.jony.service.UserAnswerService;
 import com.jony.service.UserQuestionService;
 import com.jony.service.UserService;
@@ -19,10 +18,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user/operate")
@@ -31,8 +27,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class OperateController {
 
     private final UserService userService;
+    private final SysUserMapper userMapper;
     private final UserQuestionService userQuestionService;
     private final UserAnswerService userAnswerService;
+
+
+    @PutMapping("/updateProfile")
+    @AuthCheck(mustRole = "user")
+    @Operation(summary = "更新用户信息")
+    public CommonResult<?> updateProfile(@RequestBody UserUpdateDTO userUpdateDTO) {
+        boolean result = userService.updateUser(userUpdateDTO);
+        if (result) {
+            return CommonResult.success(ResultCode.SUCCESS);
+        }
+        return CommonResult.failed("更新失败");
+
+    }
 
 
     // region 【用户点赞、收藏、浏览记录、动态】

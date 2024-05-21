@@ -6,6 +6,11 @@ import lombok.Data;
 public class ResVideoDTO {
 
     /**
+     * userId
+     */
+    private Long userId;
+
+    /**
      * 课程名称
      */
     private String courseName;

@@ -1,5 +1,6 @@
 package com.jony.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -27,14 +28,18 @@ public class ResDocumentServiceImpl extends ServiceImpl<ResDocumentMapper, ResDo
 
     @Override
     public List<ResDocument> fetchWhole() {
-        return this.list();
+        LambdaQueryWrapper<ResDocument> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(ResDocument::getPublishStatus, 1);
+        return this.list(wrapper);
     }
 
     @Override
     public List<ResDocument> pagingQuery(Integer pageSize, Integer pageNum) {
         // 定义MP的分页对象 arg1:页面   arg2:行数
         IPage<ResDocument> page = new Page<>(pageNum, pageSize);
-        IPage<ResDocument> resDocumentIPage = resDocumentMapper.selectPage(page, null);
+        LambdaQueryWrapper<ResDocument> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(ResDocument::getPublishStatus, 1);
+        IPage<ResDocument> resDocumentIPage = resDocumentMapper.selectPage(page, wrapper);
         // 从分页对象中获取总记录数
         return resDocumentIPage.getRecords();
     }

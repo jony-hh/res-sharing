@@ -31,13 +31,14 @@ public class FileController {
     @Operation(summary = "多文件上传")
     public CommonResult<?> upload(HttpServletRequest request,
                                   @RequestParam("file") MultipartFile[] fileList) throws Exception {
-        String uploadUser = request.getParameter("uploadUser");
-        if (uploadUser.isEmpty()) {
-            return CommonResult.failed("upload-user is empty");
-        }
-        log.info("upload-user:{}", uploadUser);
-        List<HashMap<String, String>> urlList = new ArrayList<>();
+        // String uploadUser = request.getParameter("uploadUser");
+        // if (uploadUser.isEmpty()) {
+        //     return CommonResult.failed("upload-user is empty");
+        // }
+        // log.info("upload-user:{}", uploadUser);
+        List<List<HashMap<String, String>>> urlList = new ArrayList<>();
         for (MultipartFile multipartFile : fileList) {
+            ArrayList<HashMap<String, String>> item = new ArrayList<>();
             // 解析文件信息和保存
             String originalFilename = multipartFile.getOriginalFilename();
             if (originalFilename == null) {
@@ -45,9 +46,13 @@ public class FileController {
             }
             String filePath = PathUtils.generateFilePath(originalFilename);
             String url = fileService.uploadOss(multipartFile, filePath);
-            HashMap<String, String> fileMap = new HashMap<>();
-            fileMap.put(originalFilename, url);
-            urlList.add(fileMap);
+            HashMap<String, String> name = new HashMap<>();
+            HashMap<String, String> fileUrl = new HashMap<>();
+            name.put("name", originalFilename);
+            fileUrl.put("url", url);
+            item.add(name);
+            item.add(fileUrl);
+            urlList.add(item);
         }
         return CommonResult.success(urlList);
     }

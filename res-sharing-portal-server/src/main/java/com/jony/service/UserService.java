@@ -27,7 +27,7 @@ public interface UserService extends IService<SysUser> {
     boolean localRegister(UserRegisterDTO userRegisterDTO);
 
     /**
-     * feat: 获取当前用户
+     * feat: 获取当前用户的角色
      *
      * @param id
      * @return

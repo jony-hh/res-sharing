@@ -56,11 +56,6 @@ public class ElasticSearchConfigProperties {
     private String username;
 
     /**
-     * 数据查询的索引
-     */
-    private String index;
-
-    /**
      * 密码
      */
     private String passwd;

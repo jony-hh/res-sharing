@@ -3,7 +3,6 @@ package com.jony.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.yitter.idgen.YitIdHelper;
-import com.jony.convert.SysUserConvert;
 import com.jony.dto.*;
 import com.jony.entity.SysAuth;
 import com.jony.entity.SysRole;
@@ -148,6 +147,7 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
         String authToken = PasswordUtils.encrypt(ymlSecret, UUID.randomUUID().toString().replace("-", ""));
         if (StringUtils.hasText(authToken)) {
             redisUtils.strSet(RedisKeyEnum.GROUP_AUTH_TOKEN.getKey() + authToken, sysUser, ymlExpireTime);
+            response.addHeader("Access-Control-Expose-Headers", ymlAuthToken);
             response.setHeader(ymlAuthToken, authToken);
             if (Boolean.TRUE.equals(userLoginDTO.getIsRememberMe())) {
                 String rememberMeToken = PasswordUtils.encrypt(ymlSecret, UUID.randomUUID().toString().replace("-", ""));
@@ -193,7 +193,11 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
     @Override
     public boolean updateUser(UserUpdateDTO userUpdateDTO) {
         SysUser user = this.getById(userUpdateDTO.getId());
-        SysUserConvert.INSTANCE.updateTargetFromSource(userUpdateDTO,user);
+        user.setCompany(userUpdateDTO.getCompany());
+        user.setNickname(userUpdateDTO.getNickname());
+        user.setProfession(userUpdateDTO.getProfession());
+        user.setInterests(userUpdateDTO.getInterests());
+        user.setIntroduction(userUpdateDTO.getIntroduction());
         boolean b = this.updateById(user);
         return b;
     }

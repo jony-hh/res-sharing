@@ -56,7 +56,7 @@ public class ResBookController {
         return CommonResult.success(book, resultMessage);
     }
 
-    @GetMapping("/fetchById")
+    @GetMapping("/single")
     @Operation(summary = "根据id查询单个wiki书籍")
     public CommonResult<?> fetchById(@RequestParam("id") Long id) {
         ResBook question = resBookService.fetchById(id);

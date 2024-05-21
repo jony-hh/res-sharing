@@ -8,7 +8,7 @@ public class RedisThumbOrStarKeyUtil {
     public static final String MAP_KEY_USER_THUMB = "MAP_KEY_USER_THUMB";
 
     /**
-     * 保存不同内容被点赞总数的key
+     * 保存不同内容被点赞增量的key
      */
     public static final String MAP_KEY_USER_THUMB_COUNT = "MAP_KEY_USER_THUMB_COUNT";
 
@@ -23,7 +23,7 @@ public class RedisThumbOrStarKeyUtil {
     public static final String MAP_KEY_USER_STAR = "MAP_KEY_USER_STAR";
 
     /**
-     * 保存不同内容被收藏总数的key
+     * 保存不同内容被收藏增量的key
      */
     public static final String MAP_KEY_USER_STAR_COUNT = "MAP_KEY_USER_STAR_COUNT";
 

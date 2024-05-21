@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jony.entity.SysUser;
 import com.jony.security.vo.UserInfoVo;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * sysUser表-服务接口
  *
@@ -20,6 +23,8 @@ public interface SysUserService extends IService<SysUser> {
      * @return 用户信息
      */
     UserInfoVo findByUserAuthIdentifier(String userAuthIdentifier, String authType);
+
+    List<HashMap<String, Object>> getList(String query, Integer page, Integer size);
 }
 
 

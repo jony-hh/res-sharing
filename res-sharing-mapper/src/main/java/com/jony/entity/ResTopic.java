@@ -13,7 +13,7 @@ import java.sql.Timestamp;
  * resTopic表-实体类
  *
  * @author jony
- * @since 2024-03-12 12:19:14
+ * @since 2024-04-21 10:44:15
  */
 @TableName("res_topic")
 @Data
@@ -39,6 +39,16 @@ public class ResTopic implements Serializable {
      * 话题元素内容
      */
     private String content;
+
+    /**
+     * 点赞数
+     */
+    private Integer thumbNum;
+
+    /**
+     * 收藏数
+     */
+    private Integer starNum;
 
     /**
      * 话题元素摘要

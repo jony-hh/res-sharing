@@ -22,7 +22,7 @@ knife4j:
 spring:
   # 环境 dev|test|prod
   profiles:
-    active: dev
+    active: prod
   application:
     name: res-sharing
   jackson:
@@ -101,9 +101,9 @@ shuishu:
   login-policy: TWO
   token:
     secret: spring_security_examples
-    auth-token: AuthToken
+    auth-token: auth-token
     # 此刷新token就是记住我功能的 token
-    remember-me-token: RememberMeToken
+    remember-me-token: remember-me-token
     # auth-token 有效时间（秒） 1小时 = 1 * 60 * 60
     expire-time: 3600
     # refresh-token 有效时间（秒）： 30天 = 1 * 60 * 60 * 24 * 30

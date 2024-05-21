@@ -1,14 +1,19 @@
 package com.jony.controller.res;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.yitter.idgen.YitIdHelper;
 import com.jony.api.CommonResult;
 import com.jony.convert.ResDocumentConvert;
 import com.jony.dto.ResDocumentDTO;
 import com.jony.entity.ResDocument;
+import com.jony.entity.RmTagResRelation;
+import com.jony.mapper.RmTagMapper;
+import com.jony.mapper.RmTagResRelationMapper;
 import com.jony.service.ResDocumentService;
 import com.jony.service.impl.FileService;
 import com.jony.utils.PathUtils;
+import com.jony.vo.ResDocumentVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -20,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * resDocument表-控制器层
@@ -37,16 +43,39 @@ public class ResDocumentController {
     private ResDocumentService resDocumentService;
 
     @Resource
+    RmTagMapper tagMapper;
+
+    @Resource
+    RmTagResRelationMapper tagResRelationMapper;
+    @Resource
     FileService fileService;
 
     @PostMapping("/addDocument")
     @Operation(summary = "用户上传文档资源")
     public CommonResult<?> addDocument(@RequestBody ResDocumentDTO resDocumentDTO) {
+        // 判断标题是否敏感
+        // String content = resDocumentDTO.getTitle();
+        // List<String> wordList = SensitiveWordHelper.findAll(content);
+        // if (!wordList.isEmpty()) {
+        //     return CommonResult.failed("标题违规，请重试！");
+        // }
         ResDocument resDocument = ResDocumentConvert.INSTANCE.toResDocument(resDocumentDTO);
+        if (resDocumentDTO.getName().contains("docx") || resDocumentDTO.getName().contains("doc")) {
+            resDocument.setTypeUrl("https://s21.ax1x.com/2024/04/10/pFOhc5Q.png");
+        }
+        if (resDocumentDTO.getName().contains("pdf")) {
+            resDocument.setTypeUrl("https://s21.ax1x.com/2024/04/10/pFOhR8s.png");
+        }
+        if (resDocumentDTO.getName().contains("ppt") || resDocumentDTO.getName().contains("pptx")) {
+            resDocument.setTypeUrl("https://s21.ax1x.com/2024/04/10/pFOhR8s.png");
+        }
+        if (resDocumentDTO.getName().contains("xls") || resDocumentDTO.getName().contains("xlsx")) {
+            resDocument.setTypeUrl("https://s21.ax1x.com/2024/04/10/pFOhO2R.png");
+        }
         // 雪花漂移id
         long id = YitIdHelper.nextId();
         resDocument.setId(id);
-        resDocument.setPublishStatus(1);
+        resDocument.setPublishStatus(0);
         String resultMessage = resDocumentService.addDocument(resDocument);
         return CommonResult.success(resDocument, resultMessage);
     }
@@ -63,10 +92,26 @@ public class ResDocumentController {
     @Operation(summary = "分页查询文档数据")
     public CommonResult<?> pagingQuery(@RequestParam("page_size") Integer pageSize, @RequestParam("page_num") Integer pageNum) {
         List<ResDocument> documentList = resDocumentService.pagingQuery(pageSize, pageNum);
-        return CommonResult.success(documentList);
+        List<ResDocumentVO> newDocumentList = documentList.stream()
+                .map(document -> {
+                    // 进行对象转换的逻辑，将document转为ResDocumentVO
+                    ResDocumentVO resDocumentVO = ResDocumentConvert.INSTANCE.toResDocumentVO(document);
+                    // 查询tags
+                    // 这里的tags是通过document的id查询的，所以需要将document的id传进去
+                    LambdaQueryWrapper<RmTagResRelation> wrapper = new LambdaQueryWrapper<>();
+                    wrapper.eq(RmTagResRelation::getResId, document.getId());
+                    List<RmTagResRelation> rmTagResRelations = tagResRelationMapper.selectList(wrapper);
+                    List<String> tags = rmTagResRelations.stream()
+                            .map(rmTagResRelation -> tagMapper.selectById(rmTagResRelation.getTagId()).getName())
+                            .collect(Collectors.toList());
+                    resDocumentVO.setTags(tags);
+                    return resDocumentVO;
+                })
+                .collect(Collectors.toList());
+        return CommonResult.success(newDocumentList);
     }
 
-    @GetMapping("/fetchById")
+    @GetMapping("/single")
     @Operation(summary = "根据id查询单个文档数据")
     public CommonResult<?> fetchById(@RequestParam("id") Long id) {
         ResDocument documentList = resDocumentService.fetchById(id);

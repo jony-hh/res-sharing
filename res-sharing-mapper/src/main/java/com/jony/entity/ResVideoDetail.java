@@ -26,6 +26,11 @@ public class ResVideoDetail implements Serializable {
     private Long id;
 
     /**
+     * userId
+     */
+    private Long userId;
+
+    /**
      * 所属课程id
      */
     private Long videoId;
@@ -44,6 +49,16 @@ public class ResVideoDetail implements Serializable {
      * 章节等级 0顶级 1下一级 2下两级
      */
     private Integer level;
+
+    /**
+     * 发布时间
+     */
+    private Timestamp publishTime;
+
+    /**
+     * 发布状态 0草稿 1已发布
+     */
+    private Integer publishStatus;
 
     /**
      * 版本号

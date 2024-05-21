@@ -16,6 +16,11 @@
             <version>${revision}</version>
         </dependency>
         <dependency>
+            <groupId>com.jony</groupId>
+            <artifactId>res-sharing-mapper</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
             <groupId>co.elastic.clients</groupId>
             <artifactId>elasticsearch-java</artifactId>
         </dependency>

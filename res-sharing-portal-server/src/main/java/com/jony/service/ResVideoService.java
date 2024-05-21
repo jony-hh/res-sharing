@@ -19,7 +19,9 @@ public interface ResVideoService extends IService<ResVideo> {
 
     ResVideo fetchById(Long id);
 
-    String addVideo(ResVideo resVideo);
+    ResVideo addVideo(ResVideo resVideo);
+
+    List<ResVideo> fetchByUserId(Long userId);
 }
 
 

@@ -45,7 +45,7 @@ public class SysAuthServiceImpl extends ServiceImpl<SysAuthMapper, SysAuth> impl
     private String salt;
 
     @Override
-    public UserInfoVo login(String name, String pwd, UserEnum.AuthType authType, Boolean isRememberMe, HttpServletResponse response) {
+    public String login(String name, String pwd, UserEnum.AuthType authType, Boolean isRememberMe, HttpServletResponse response) {
         Authentication authentication = null;
         if (UserEnum.AuthType.LOCAL.equals(authType)) {
             authentication = authenticationManager.authenticate(new LocalAuthenticationToken(name, pwd));
@@ -59,10 +59,11 @@ public class SysAuthServiceImpl extends ServiceImpl<SysAuthMapper, SysAuth> impl
         UserInfoVo userInfoVO = (UserInfoVo) authentication.getPrincipal();
 
         // 生成token，或者在provider中生成
-        if (userInfoVO != null && !tokenUtils.setUserInfoVo(userInfoVO, isRememberMe, response)) {
+        String token = tokenUtils.setUserInfoVo(userInfoVO, isRememberMe, response);
+        if (userInfoVO != null && token == null) {
             throw new BusinessException(401, "登录失败");
         }
-        return userInfoVO;
+        return token;
     }
 
 

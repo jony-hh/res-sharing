@@ -33,6 +33,9 @@ public class DocumentApi {
      * @throws IOException 异常信息
      */
     public <T> IndexResponse addDocument(String indexName, T o) throws IOException {
+        if (o == null) {
+            return null;
+        }
         IndexResponse indexResponse = elasticsearchClient.index(
                 indexRequest -> indexRequest.index(indexName).document(o));
 
@@ -52,6 +55,9 @@ public class DocumentApi {
      * @throws IOException 异常信息
      */
     public <T> IndexResponse addDocument(String indexName, String id, T o) throws IOException {
+        if (o == null) {
+            return null;
+        }
         IndexResponse indexResponse = elasticsearchClient.index(
                 indexRequest -> indexRequest.index(indexName).id(id).document(o));
 
@@ -109,8 +115,12 @@ public class DocumentApi {
      * @throws IOException 异常信息
      */
     public <T> List<T> getAllDocument(String indexName, Class<T> clazz) throws IOException {
-        SearchResponse<T> searchResponse = elasticsearchClient.search(a -> a.index(indexName), clazz);
-
+        SearchResponse<T> searchResponse = elasticsearchClient.search(a -> a
+                        .index(indexName)
+                        .query(q -> q.matchAll(m -> m))
+                        .from(0)
+                        .size(10000)
+                , clazz);
         List<Hit<T>> hitList = getHitList(searchResponse);
 
         return hitList.stream().map(Hit::source).toList();
@@ -175,6 +185,9 @@ public class DocumentApi {
     public <T> boolean batchAddDocument(String indexName, List<T> list) throws IOException {
         BulkRequest.Builder br = new BulkRequest.Builder();
 
+        if (list == null || list.isEmpty()) {
+            return true;
+        }
         for (T element : list) {
             br.operations(op -> op.index(idx -> idx.index(indexName).document(element)));
         }

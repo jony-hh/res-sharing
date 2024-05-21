@@ -1,6 +1,10 @@
 package com.jony.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jony.entity.SysAuth;
 import com.jony.entity.SysRole;
@@ -17,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -76,6 +82,43 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
 
         return userInfoVO;
+    }
+
+    @Override
+    public List<HashMap<String, Object>> getList(String query, Integer page, Integer size) {
+        Page<SysUser> sysUserPage = new Page<>();
+        sysUserPage.setCurrent(page);
+        sysUserPage.setSize(size);
+        if (query == null) {
+            IPage<SysUser> pageInfo = userMapper.selectPage(sysUserPage, null);
+
+            HashMap<String, Object> hashMap1 = new HashMap<>();
+            hashMap1.put("total", pageInfo.getTotal());
+
+            HashMap<String, Object> hashMap2 = new HashMap<>();
+            hashMap2.put("list", pageInfo.getRecords());
+
+            List<HashMap<String, Object>> userList = new ArrayList<>();
+            userList.add(hashMap1);
+            userList.add(hashMap2);
+            return userList;
+        }
+        QueryWrapper<SysUser> wrapper = Wrappers.query();
+        wrapper.like("username", query);
+        IPage<SysUser> pageInfo = userMapper.selectPage(sysUserPage, wrapper);
+
+
+        HashMap<String, Object> hashMap1 = new HashMap<>();
+        hashMap1.put("total", pageInfo.getTotal());
+
+        HashMap<String, Object> hashMap2 = new HashMap<>();
+        hashMap2.put("list", pageInfo.getRecords());
+
+        List<HashMap<String, Object>> userList = new ArrayList<>();
+        userList.add(hashMap1);
+        userList.add(hashMap2);
+
+        return userList;
     }
 
 }

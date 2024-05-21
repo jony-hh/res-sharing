@@ -8,10 +8,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResDocumentDTO {
+
+    /**
+     * userId
+     */
+    private Long userId;
+
     /**
      * 文档标题
      */
     private String title;
+
+    /**
+     * 文档名称
+     */
+    private String name;
 
     /**
      * 发布者

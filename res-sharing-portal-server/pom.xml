@@ -30,11 +30,11 @@
             <groupId>com.github.houbb</groupId>
             <artifactId>sensitive-word</artifactId>
         </dependency>
-        <!-- <dependency> -->
-        <!--     <groupId>com.jony</groupId> -->
-        <!--     <artifactId>res-sharing-search</artifactId> -->
-        <!--     <version>${revision}</version> -->
-        <!-- </dependency> -->
+        <dependency>
+            <groupId>com.jony</groupId>
+            <artifactId>res-sharing-search</artifactId>
+            <version>${revision}</version>
+        </dependency>
         <!-- TODO 依赖后无法上传文件 -->
         <!-- <dependency> -->
         <!--     <groupId>com.jony</groupId> -->

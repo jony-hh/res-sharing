@@ -1,0 +1,94 @@
+
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "long",
+        "index": false
+      },
+      "course_name": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "lecturer": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "sign": {
+        "type": "keyword"
+      },
+      "cover_url": {
+        "type": "text",
+        "index": false
+      },
+      "thumbnail": {
+        "type": "text",
+        "index": false
+      },
+      "college": {
+        "type": "keyword"
+      },
+      "tag": {
+        "type": "keyword"
+      },
+      "author": {
+        "type": "keyword"
+      },
+      "flag": {
+        "type": "keyword"
+      },
+      "summary": {
+        "type": "text",
+        "analyzer": "ik_max_word",
+        "search_analyzer": "ik_smart"
+      },
+      "thumb_num": {
+        "type": "integer"
+      },
+      "star_num": {
+        "type": "integer"
+      },
+      "student_num": {
+        "type": "long"
+      },
+      "view_count": {
+        "type": "long"
+      },
+      "publish_time": {
+        "type": "date",
+        "format": "strict_date_optional_time"
+      },
+      "publish_status": {
+        "type": "byte"
+      },
+      "version": {
+        "type": "integer"
+      },
+      "deleted": {
+        "type": "byte"
+      },
+      "creator": {
+        "type": "long"
+      },
+      "created_time": {
+        "type": "date",
+        "format": "strict_date_optional_time"
+      },
+      "updater": {
+        "type": "long"
+      },
+      "updated_time": {
+        "type": "date",
+        "format": "strict_date_optional_time"
+      }
+    }
+  }
+}
